@@ -1,9 +1,22 @@
-import { auth } from '@/auth';
+import { auth } from "@/auth";
+import { NextResponse } from "next/server";
 
-export default auth;
+export default auth((req) => {
+    const isLoggedIn = !!req.auth;
+    const isOnDashboard = req.nextUrl.pathname.startsWith("/dashboard");
+    const isOnLogin = req.nextUrl.pathname.startsWith("/login");
+
+    if (isOnDashboard && !isLoggedIn) {
+        return NextResponse.redirect(new URL("/login", req.url));
+    }
+
+    if (isOnLogin && isLoggedIn) {
+        return NextResponse.redirect(new URL("/dashboard", req.url));
+    }
+
+    return NextResponse.next();
+});
 
 export const config = {
-    // The matcher defines the routes to be protected by the middleware
-    // We will steer all unauthenticated users from these routes to /login
-    matcher: ['/dashboard/:path*', '/settings/:path*', '/billing/:path*'],
+    matcher: ["/dashboard/:path*", "/login"],
 };
