@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { Menu, X, Compass } from "lucide-react";
 import { Sidebar } from "./sidebar";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/Sheet"; // See note below
 
 // Note: If you don't have a Sheet/Drawer component, we'll build a simple mobile toggle.
 // For now, assuming a simple state-based toggle for simplicity in this phase.

@@ -4,19 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="96c15fb9-048b-4717-8d22-6ea6afd2a399" name="Changes" comment="initial commit">
-      <change afterPath="$PROJECT_DIR$/app/(app)/layout.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/(app)/transactions/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/(legal)/layout.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/(legal)/privacy/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/(legal)/terms/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/dashboard/dashboard/spending-chart.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/components/layout/mobile-header.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/components/layout/sidebar.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-    </list>
+    <list default="true" id="96c15fb9-048b-4717-8d22-6ea6afd2a399" name="Changes" comment="login" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -79,6 +67,12 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/components" />
+      <recent name="$PROJECT_DIR$/components/auth" />
+    </key>
+  </component>
   <component name="RunManager" selected="npm.Next.js: server-side">
     <configuration name="Next.js: debug client-side" type="JavascriptDebugType" uri="http://localhost:3000/">
       <method v="2" />
@@ -138,7 +132,7 @@
       <workItem from="1763554240536" duration="470000" />
       <workItem from="1763556977376" duration="3066000" />
       <workItem from="1763565353740" duration="5054000" />
-      <workItem from="1763992922159" duration="963000" />
+      <workItem from="1763992922159" duration="1279000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <option name="closed" value="true" />
@@ -156,7 +150,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763566348687</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="login">
+      <option name="closed" value="true" />
+      <created>1763994070713</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1763994070713</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -175,6 +177,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="initial commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="initial commit" />
+    <MESSAGE value="login" />
+    <option name="LAST_COMMIT_MESSAGE" value="login" />
   </component>
 </project>
