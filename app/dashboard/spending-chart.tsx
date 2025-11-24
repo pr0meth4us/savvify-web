@@ -29,7 +29,6 @@ export function SpendingChart({ data }: { data: ChartData[] }) {
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
-              data={data}
               cx="50%"
               cy="50%"
               innerRadius={60}
