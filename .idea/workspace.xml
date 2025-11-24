@@ -5,19 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="96c15fb9-048b-4717-8d22-6ea6afd2a399" name="Changes" comment="initial commit">
-      <change afterPath="$PROJECT_DIR$/app/api/auth/[...nextauth]/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/dashboard/layout.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/dashboard/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/login/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/types/api.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/types/next-auth.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/(app)/layout.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/(app)/transactions/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/(legal)/layout.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/(legal)/privacy/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/(legal)/terms/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/dashboard/dashboard/spending-chart.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/components/layout/mobile-header.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/components/layout/sidebar.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth.ts" beforeDir="false" afterPath="$PROJECT_DIR$/auth.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/api.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/middleware.ts" beforeDir="false" afterPath="$PROJECT_DIR$/middleware.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,20 +64,22 @@
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "main",
     "junie.onboarding.icon.badge.shown": "true",
-    "last_opened_file_path": "/home/nick/code/savvify-frontend",
+    "last_opened_file_path": "/home/nick/code/finance-bot",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "npm.Next.js: server-side.executor": "Run",
+    "npm.build.executor": "Run",
     "npm.dev.executor": "Run",
+    "prettierjs.PrettierConfiguration.Package": "/home/nick/code/savvify-frontend/node_modules/prettier",
     "to.speed.mode.migration.done": "true",
-    "ts.external.directory.path": "/snap/webstorm/541/plugins/javascript-plugin/jsLanguageServicesImpl/external",
+    "ts.external.directory.path": "/home/nick/code/savvify-frontend/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="npm.dev">
+  <component name="RunManager" selected="npm.Next.js: server-side">
     <configuration name="Next.js: debug client-side" type="JavascriptDebugType" uri="http://localhost:3000/">
       <method v="2" />
     </configuration>
@@ -88,6 +88,16 @@
       <command value="run" />
       <scripts>
         <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build" />
       </scripts>
       <node-interpreter value="project" />
       <envs />
@@ -106,13 +116,14 @@
     <recent_temporary>
       <list>
         <item itemvalue="npm.dev" />
+        <item itemvalue="npm.build" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-3aa1da707db6-JavaScript-WS-252.27397.92" />
+        <option value="bundled-js-predefined-d6986cc7102b-a71380e98a7c-JavaScript-WS-252.28238.10" />
       </set>
     </attachedChunks>
   </component>
@@ -126,7 +137,8 @@
       <workItem from="1762844827700" duration="4625000" />
       <workItem from="1763554240536" duration="470000" />
       <workItem from="1763556977376" duration="3066000" />
-      <workItem from="1763565353740" duration="757000" />
+      <workItem from="1763565353740" duration="5054000" />
+      <workItem from="1763992922159" duration="963000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <option name="closed" value="true" />
@@ -136,7 +148,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763554443026</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="initial commit">
+      <option name="closed" value="true" />
+      <created>1763566348687</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1763566348687</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

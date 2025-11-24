@@ -1,5 +1,6 @@
 import React from 'react';
 import LoginForm from '@/components/auth/login-form';
+import TelegramLogin from '@/components/auth/telegram-login';
 import Link from 'next/link';
 import { Metadata } from 'next';
 
@@ -13,7 +14,6 @@ export default function LoginPage() {
     <div className="min-h-screen flex flex-col lg:flex-row bg-helm-fog">
       {/* Left: Navigation/Brand Panel */}
       <div className="hidden lg:flex w-1/2 bg-helm-navy relative overflow-hidden items-center justify-center text-white p-12">
-        {/* Abstract Navigation Graphics */}
         <div className="absolute inset-0 opacity-10">
           <svg className="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
             <path d="M0 100 L100 0 L100 100 Z" fill="currentColor" />
@@ -37,7 +37,7 @@ export default function LoginPage() {
       {/* Right: Form Panel */}
       <div className="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24 bg-white">
         <div className="mx-auto w-full max-w-sm lg:w-96">
-          <div className="text-center lg:text-left">
+          <div className="text-center lg:text-left mb-8">
             <Link href="/" className="inline-block">
               <span className="text-3xl font-bold text-helm-navy font-display tracking-tight">
                 Helm
@@ -46,18 +46,26 @@ export default function LoginPage() {
                 Savvify
               </span>
             </Link>
-            <h2 className="mt-8 text-2xl font-bold leading-9 tracking-tight text-helm-navy font-display">
+            <h2 className="mt-6 text-2xl font-bold leading-9 tracking-tight text-helm-navy font-display">
               Access your compass
             </h2>
-            <p className="mt-2 text-sm leading-6 text-helm-ocean">
-              Don't have an account?{' '}
-              <Link href="/signup" className="font-semibold text-helm-navy hover:text-helm-ocean underline decoration-helm-seafoam underline-offset-4">
-                Start navigating today
-              </Link>
-            </p>
           </div>
 
-          <div className="mt-10">
+          <div className="mt-6">
+            {/* Telegram Login (The "Telegram Door") */}
+            <TelegramLogin />
+
+            {/* Divider */}
+            <div className="relative mb-6">
+              <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                <div className="w-full border-t border-gray-200" />
+              </div>
+              <div className="relative flex justify-center">
+                <span className="bg-white px-2 text-xs text-gray-500 uppercase tracking-wider">Or use email</span>
+              </div>
+            </div>
+
+            {/* Email Login */}
             <LoginForm />
           </div>
 
