@@ -3,7 +3,6 @@ import Credentials from "next-auth/providers/credentials";
 import { authConfig } from "./auth.config";
 import axios from "axios";
 
-// Define the expected response from Bifrost
 interface BifrostLoginResponse {
   jwt: string;
   error?: string;
@@ -25,7 +24,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const bifrostUrl = process.env.BIFROST_URL?.replace(/\/$/, "");
           let response;
 
-          // STRATEGY 1: Telegram Login
           if (credentials?.telegramUser) {
             const tgUser = JSON.parse(credentials.telegramUser as string);
 
@@ -47,7 +45,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               }
             );
           }
-          // STRATEGY 2: Email/Password Login
           else if (credentials?.email && credentials?.password) {
             response = await axios.post<BifrostLoginResponse>(
               `${bifrostUrl}/auth/api/login`,
@@ -70,13 +67,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return null;
           }
 
-          // Return object matching User type in types/next-auth.d.ts
+          // FIX: Map 'jwt' to both 'token' and 'accessToken' to satisfy strict typing
+          const jwt = response.data.jwt;
+
           return {
-            id: "user-id-placeholder", // Real ID is in the JWT
-            telegramId: "placeholder", // Required by your type def
-            role: "user",              // Required by your type def
-            token: response.data.jwt,  // Required by your type def
-            // NextAuth default fields
+            id: "user-id-placeholder",
+            telegramId: "placeholder",
+            role: "user",
+            token: jwt,       // Kept for legacy
+            accessToken: jwt, // REQUIRED by User type definition
             name: (credentials?.email as string) || "Telegram User",
             email: (credentials?.email as string) || "",
           };
@@ -91,8 +90,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        // Map the properties from the user object returned above to the token
-        token.accessToken = user.token;
+        token.accessToken = user.accessToken; // Use the correctly mapped field
         token.role = user.role;
         token.telegramId = user.telegramId;
         token.userId = user.id;
@@ -102,7 +100,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({ session, token }) {
       if (token) {
         session.accessToken = token.accessToken as string;
-        // Ensure user object in session has required fields
         session.user.id = token.userId as string;
         session.user.role = token.role as string;
         session.user.telegramId = token.telegramId as string;
