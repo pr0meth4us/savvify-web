@@ -4,15 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="96c15fb9-048b-4717-8d22-6ea6afd2a399" name="Changes" comment="package.json">
-      <change afterPath="$PROJECT_DIR$/components/auth/auth-guard.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/transactions/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/transactions/transaction-modal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/transactions/transaction-table.tsx" afterDir="false" />
+    <list default="true" id="96c15fb9-048b-4717-8d22-6ea6afd2a399" name="Changes" comment="fix">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(legal)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(legal)/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/dashboard/dashboard/spending-chart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/spending-chart.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -143,7 +136,7 @@
       <workItem from="1763554240536" duration="470000" />
       <workItem from="1763556977376" duration="3066000" />
       <workItem from="1763565353740" duration="5054000" />
-      <workItem from="1763992922159" duration="1967000" />
+      <workItem from="1763992922159" duration="3952000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <option name="closed" value="true" />
@@ -177,7 +170,23 @@
       <option name="project" value="LOCAL" />
       <updated>1763994474203</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="fix">
+      <option name="closed" value="true" />
+      <created>1763994917115</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1763994917115</updated>
+    </task>
+    <task id="LOCAL-00006" summary="fix">
+      <option name="closed" value="true" />
+      <created>1763995122708</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1763995122708</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -198,6 +207,7 @@
     <MESSAGE value="initial commit" />
     <MESSAGE value="login" />
     <MESSAGE value="package.json" />
-    <option name="LAST_COMMIT_MESSAGE" value="package.json" />
+    <MESSAGE value="fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix" />
   </component>
 </project>
