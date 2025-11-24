@@ -79,6 +79,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/dashboard" />
       <recent name="$PROJECT_DIR$/components" />
       <recent name="$PROJECT_DIR$/components/auth" />
     </key>
