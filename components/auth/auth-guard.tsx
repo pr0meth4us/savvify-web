@@ -16,17 +16,33 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     const checkProfile = async () => {
       if (status === "loading") return;
 
+      if (status === "unauthenticated") {
+        // Handled by Next.js middleware mostly, but extra safety here
+        setIsChecking(false);
+        return;
+      }
+
       if (status === "authenticated") {
         try {
+          // Fetch full user profile to check for email
           const { data } = await api.get("/users/me");
-          const isMissingCredentials = !data.profile?.email;
 
-          if (isMissingCredentials && pathname !== "/complete-profile") {
+          // Logic: If user has no email, they MUST go to complete-profile.
+          // Unless they are already there.
+          const isMissingEmail = !data.email;
+          const isOnCompleteProfile = pathname === "/complete-profile";
+
+          if (isMissingEmail && !isOnCompleteProfile) {
             router.push("/complete-profile");
+            return; // Stop processing, wait for redirect
           }
-          else if (!isMissingCredentials && pathname === "/complete-profile") {
+
+          // If they HAVE an email but are trying to access complete-profile, send to dashboard
+          if (!isMissingEmail && isOnCompleteProfile) {
             router.push("/dashboard");
+            return;
           }
+
         } catch (error) {
           console.error("Profile check failed", error);
         }
@@ -40,14 +56,14 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
   if (status === "loading" || isChecking) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-helm-fog">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50">
         <Spinner size="lg" />
-        <p className="mt-4 text-helm-ocean font-medium animate-pulse">
-          Verifying coordinates...
+        <p className="mt-4 text-slate-500 font-medium">
+          Loading...
         </p>
       </div>
     );
   }
 
   return <>{children}</>;
-} 
+}

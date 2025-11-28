@@ -14,8 +14,6 @@ export default function TelegramLogin() {
 
   const handleOtpLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Basic validation
     if (!code || code.length < 6) {
       setError("Please enter a valid 6-digit code.");
       return;
@@ -25,18 +23,15 @@ export default function TelegramLogin() {
     setError(null);
 
     try {
-      // We pass 'otpCode' to the credentials provider
       const result = await signIn("bifrost-credentials", {
         otpCode: code,
         redirect: false,
       });
 
       if (result?.error) {
-        // If Bifrost returns 401/403, NextAuth returns an error
         setError("Invalid or expired code. Please try again.");
         setIsLoading(false);
       } else {
-        // Success: Navigate to dashboard
         router.push("/dashboard");
         router.refresh();
       }
@@ -48,11 +43,11 @@ export default function TelegramLogin() {
   };
 
   return (
-    <div className="w-full space-y-4 mb-6 border border-helm-fog-dark p-6 rounded-lg bg-helm-fog/50">
-      <div className="text-center mb-4">
-        <h3 className="font-semibold text-helm-navy font-display">Telegram Login</h3>
-        <p className="text-xs text-helm-ocean mt-1">
-          Go to <span className="font-mono bg-white px-1 rounded border border-helm-fog-dark">@FinanceBot</span>, type <b>/login</b>, and enter the code below.
+    <div className="w-full space-y-4">
+      <div className="text-center mb-4 bg-blue-50 p-4 rounded-lg border border-blue-100">
+        <h3 className="font-semibold text-blue-900">Telegram Login</h3>
+        <p className="text-sm text-blue-700 mt-1">
+          Open <b>@FinanceBot</b> on Telegram, type <span className="font-mono bg-white px-1 rounded">/login</span>, and enter the code below.
         </p>
       </div>
 
@@ -61,26 +56,26 @@ export default function TelegramLogin() {
           <Input
             placeholder="000000"
             value={code}
-            onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))} // Only allow numbers
-            className="text-center tracking-[0.5em] text-lg font-mono w-48 bg-white"
+            onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))}
+            className="text-center tracking-[0.5em] text-lg font-mono w-48"
             maxLength={6}
             inputMode="numeric"
           />
         </div>
 
         {error && (
-          <p className="text-xs text-red-600 text-center font-medium animate-in fade-in slide-in-from-top-1">
+          <p className="text-sm text-red-600 text-center font-medium">
             {error}
           </p>
         )}
 
         <Button
           type="submit"
-          variant="accent"
+          variant="primary"
           className="w-full"
           isLoading={isLoading}
         >
-          Verify & Connect
+          Verify Code
         </Button>
       </form>
     </div>

@@ -17,14 +17,12 @@ export default function TransactionsPage() {
   const fetchTransactions = async () => {
     setLoading(true);
     try {
-      // Using the search endpoint with empty params to get a consistent list
-      // or /recent if preferred. Search allows better filtering later.
       const res = await api.post<Transaction[]>("/transactions/search", {
         limit: 50 // Fetch last 50
       });
       setTransactions(res.data);
     } catch (error) {
-      console.error("Failed to fetch course data:", error);
+      console.error("Failed to fetch transactions:", error);
     } finally {
       setLoading(false);
     }
@@ -45,11 +43,10 @@ export default function TransactionsPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure you want to jettison this record?")) return;
-
+    if (!confirm("Are you sure you want to delete this transaction?")) return;
     try {
       await api.delete(`/transactions/${id}`);
-      fetchTransactions(); // Refresh list
+      fetchTransactions();
     } catch (error) {
       console.error("Failed to delete:", error);
     }
@@ -59,12 +56,12 @@ export default function TransactionsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-helm-navy font-display">Transaction Log</h1>
-          <p className="text-helm-ocean mt-1">Navigate your spending history.</p>
+          <h1 className="text-3xl font-bold text-slate-900">Transactions</h1>
+          <p className="text-slate-500 mt-1">Manage your income and expenses.</p>
         </div>
-        <Button onClick={handleAdd} className="shadow-lg shadow-helm-navy/20">
+        <Button onClick={handleAdd}>
           <Plus className="mr-2 h-4 w-4" />
-          Log Entry
+          Add Transaction
         </Button>
       </div>
 

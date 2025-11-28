@@ -2,15 +2,14 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Spinner } from './Spinner';
-import { Slot } from '@radix-ui/react-slot'; // You might need to install this: npm install @radix-ui/react-slot
+import { Slot } from '@radix-ui/react-slot';
 
-// Variant styles
 const variantStyles = {
-  primary: 'bg-helm-navy text-white hover:bg-helm-navy-light shadow-sm',
-  secondary: 'bg-helm-ocean text-white hover:bg-helm-ocean/90',
-  accent: 'bg-helm-seafoam text-helm-navy hover:bg-helm-seafoam/90',
-  outline: 'border border-helm-fog-dark bg-white text-helm-navy hover:bg-helm-fog',
-  ghost: 'bg-transparent text-helm-navy hover:bg-helm-fog',
+  primary: 'bg-slate-900 text-white hover:bg-slate-800 shadow-sm',
+  secondary: 'bg-blue-600 text-white hover:bg-blue-700',
+  accent: 'bg-emerald-500 text-white hover:bg-emerald-600',
+  outline: 'border border-slate-200 bg-white text-slate-700 hover:bg-slate-50',
+  ghost: 'bg-transparent text-slate-700 hover:bg-slate-100',
   danger: 'bg-red-600 text-white hover:bg-red-700',
 };
 
@@ -23,8 +22,8 @@ const sizeStyles = {
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: keyof typeof variantStyles;
-  size?: keyof typeof sizeStyles; // Added size prop
-  asChild?: boolean; // Added asChild prop
+  size?: keyof typeof sizeStyles;
+  asChild?: boolean;
   isLoading?: boolean;
 }
 
@@ -35,7 +34,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <Comp
         className={cn(
-          'inline-flex items-center justify-center rounded-md font-medium font-display tracking-wide transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-helm-horizon focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none',
+          'inline-flex items-center justify-center rounded-md font-medium tracking-wide transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none',
           variantStyles[variant],
           sizeStyles[size],
           className
@@ -46,8 +45,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       >
         {isLoading ? (
           <div className="flex items-center gap-2">
-            <Spinner size="sm" className="text-white" />
-            <span>Steering...</span>
+            <Spinner size="sm" className="text-current" />
+            <span>Loading...</span>
           </div>
         ) : (
           children
@@ -56,7 +55,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     );
   },
 );
-
 Button.displayName = 'Button';
 
 export { Button };
