@@ -4,21 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="96c15fb9-048b-4717-8d22-6ea6afd2a399" name="Changes" comment="auth update">
-      <change beforePath="$PROJECT_DIR$/app/(legal)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(legal)/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(legal)/privacy/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(legal)/privacy/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(legal)/terms/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(legal)/terms/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(public)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(public)/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(public)/pricing/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(public)/pricing/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/dashboard/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/dashboard/spending-chart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/spending-chart.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/transactions/transaction-table.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/transactions/transaction-table.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ui/PublicFooter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ui/PublicFooter.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/ui/PublicHeader.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ui/PublicHeader.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/api.ts" afterDir="false" />
-    </list>
+    <list default="true" id="96c15fb9-048b-4717-8d22-6ea6afd2a399" name="Changes" comment="lannguague" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -151,7 +137,7 @@
       <workItem from="1764330096949" duration="1235000" />
       <workItem from="1764345566578" duration="1783000" />
       <workItem from="1764348066181" duration="441000" />
-      <workItem from="1764348908673" duration="303000" />
+      <workItem from="1764348908673" duration="1062000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <option name="closed" value="true" />
@@ -249,7 +235,15 @@
       <option name="project" value="LOCAL" />
       <updated>1764347219676</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="lannguague">
+      <option name="closed" value="true" />
+      <created>1764349235034</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1764349235034</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -272,6 +266,7 @@
     <MESSAGE value="package.json" />
     <MESSAGE value="fix" />
     <MESSAGE value="auth update" />
-    <option name="LAST_COMMIT_MESSAGE" value="auth update" />
+    <MESSAGE value="lannguague" />
+    <option name="LAST_COMMIT_MESSAGE" value="lannguague" />
   </component>
 </project>

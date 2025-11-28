@@ -17,27 +17,23 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
       if (status === "loading") return;
 
       if (status === "unauthenticated") {
-        // Handled by Next.js middleware mostly, but extra safety here
         setIsChecking(false);
         return;
       }
 
       if (status === "authenticated") {
         try {
-          // Fetch full user profile to check for email
-          const { data } = await api.get("/users/me");
+          // --- FIXED: Point to the correct endpoint ---
+          const { data } = await api.get("/auth/me");
 
-          // Logic: If user has no email, they MUST go to complete-profile.
-          // Unless they are already there.
           const isMissingEmail = !data.email;
           const isOnCompleteProfile = pathname === "/complete-profile";
 
           if (isMissingEmail && !isOnCompleteProfile) {
             router.push("/complete-profile");
-            return; // Stop processing, wait for redirect
+            return;
           }
 
-          // If they HAVE an email but are trying to access complete-profile, send to dashboard
           if (!isMissingEmail && isOnCompleteProfile) {
             router.push("/dashboard");
             return;
@@ -45,6 +41,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
         } catch (error) {
           console.error("Profile check failed", error);
+          // Optional: Redirect to login if the check strictly fails (401/404)
         }
       }
 
