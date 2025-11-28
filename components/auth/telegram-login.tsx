@@ -1,105 +1,88 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Spinner } from "@/components/ui/Spinner";
-
-interface TelegramUser {
-  id: number;
-  first_name: string;
-  last_name?: string;
-  username?: string;
-  photo_url?: string;
-  auth_date: number;
-  hash: string;
-}
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
 
 export default function TelegramLogin() {
   const router = useRouter();
+  const [code, setCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const wrapperRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    // Define the global callback expected by Telegram's widget
-    // @ts-ignore
-    window.onTelegramAuth = async (user: TelegramUser) => {
-      console.log("Telegram user data received:", user);
-      setIsLoading(true);
-      setError(null);
+  const handleOtpLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-      try {
-        const result = await signIn("bifrost-credentials", {
-          telegramUser: JSON.stringify(user),
-          redirect: false,
-        });
-
-        if (result?.error) {
-          console.error("Telegram Login Failed", result?.error);
-          setError("Login failed. Please try again.");
-          setIsLoading(false);
-        } else {
-          // Success: Navigate to dashboard
-          router.push("/dashboard");
-          router.refresh();
-        }
-      } catch (error) {
-        console.error("Navigation Error", error);
-        setError("An unexpected error occurred.");
-        setIsLoading(false);
-      }
-    };
-
-    // Inject the script
-    const script = document.createElement("script");
-    script.src = "https://telegram.org/js/telegram-widget.js?22";
-    script.setAttribute("data-telegram-login", process.env.NEXT_PUBLIC_TELEGRAM_BOT_NAME || "FinanceBot");
-    script.setAttribute("data-size", "large");
-    script.setAttribute("data-radius", "8");
-    script.setAttribute("data-onauth", "onTelegramAuth(user)");
-    script.setAttribute("data-request-access", "write");
-    script.async = true;
-
-    if (wrapperRef.current) {
-      wrapperRef.current.innerHTML = ""; // Clear previous renders
-      wrapperRef.current.appendChild(script);
+    // Basic validation
+    if (!code || code.length < 6) {
+      setError("Please enter a valid 6-digit code.");
+      return;
     }
 
-    // Cleanup function
-    return () => {
-      // @ts-ignore
-      delete window.onTelegramAuth;
-    };
-  }, [router]);
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      // We pass 'otpCode' to the credentials provider
+      const result = await signIn("bifrost-credentials", {
+        otpCode: code,
+        redirect: false,
+      });
+
+      if (result?.error) {
+        // If Bifrost returns 401/403, NextAuth returns an error
+        setError("Invalid or expired code. Please try again.");
+        setIsLoading(false);
+      } else {
+        // Success: Navigate to dashboard
+        router.push("/dashboard");
+        router.refresh();
+      }
+    } catch (err) {
+      console.error("Login Error", err);
+      setError("An unexpected error occurred.");
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <div className="flex flex-col items-center justify-center w-full space-y-4 mb-6">
-      {isLoading ? (
-        <div className="flex items-center gap-3 text-helm-ocean animate-pulse p-4 bg-helm-fog rounded-lg w-full justify-center">
-          <Spinner size="sm" />
-          <span className="text-sm font-medium">Verifying coordinates...</span>
+    <div className="w-full space-y-4 mb-6 border border-helm-fog-dark p-6 rounded-lg bg-helm-fog/50">
+      <div className="text-center mb-4">
+        <h3 className="font-semibold text-helm-navy font-display">Telegram Login</h3>
+        <p className="text-xs text-helm-ocean mt-1">
+          Go to <span className="font-mono bg-white px-1 rounded border border-helm-fog-dark">@FinanceBot</span>, type <b>/login</b>, and enter the code below.
+        </p>
+      </div>
+
+      <form onSubmit={handleOtpLogin} className="space-y-4">
+        <div className="flex justify-center">
+          <Input
+            placeholder="000000"
+            value={code}
+            onChange={(e) => setCode(e.target.value.replace(/\D/g, ''))} // Only allow numbers
+            className="text-center tracking-[0.5em] text-lg font-mono w-48 bg-white"
+            maxLength={6}
+            inputMode="numeric"
+          />
         </div>
-      ) : (
-        <>
-          <div ref={wrapperRef} className="min-h-[40px] flex justify-center w-full" />
 
-          {error && (
-            <div className="w-full p-3 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-sm text-red-700 text-center">{error}</p>
-            </div>
-          )}
+        {error && (
+          <p className="text-xs text-red-600 text-center font-medium animate-in fade-in slide-in-from-top-1">
+            {error}
+          </p>
+        )}
 
-          <div className="text-center space-y-2">
-            <p className="text-xs text-helm-ocean/60">
-              Click the button above to log in with Telegram
-            </p>
-            <p className="text-xs text-helm-ocean/60">
-              A popup will open - approve the login request
-            </p>
-          </div>
-        </>
-      )}
+        <Button
+          type="submit"
+          variant="accent"
+          className="w-full"
+          isLoading={isLoading}
+        >
+          Verify & Connect
+        </Button>
+      </form>
     </div>
   );
 }
