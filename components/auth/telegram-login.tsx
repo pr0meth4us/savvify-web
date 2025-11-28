@@ -18,13 +18,17 @@ interface TelegramUser {
 export default function TelegramLogin() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Define the global callback expected by Telegram's widget
     // @ts-ignore
     window.onTelegramAuth = async (user: TelegramUser) => {
+      console.log("Telegram user data received:", user);
       setIsLoading(true);
+      setError(null);
+
       try {
         const result = await signIn("bifrost-credentials", {
           telegramUser: JSON.stringify(user),
@@ -33,14 +37,16 @@ export default function TelegramLogin() {
 
         if (result?.error) {
           console.error("Telegram Login Failed", result?.error);
+          setError("Login failed. Please try again.");
           setIsLoading(false);
         } else {
-          // Success: The AuthGuard will handle the profile completion check
+          // Success: Navigate to dashboard
           router.push("/dashboard");
           router.refresh();
         }
       } catch (error) {
         console.error("Navigation Error", error);
+        setError("An unexpected error occurred.");
         setIsLoading(false);
       }
     };
@@ -48,8 +54,7 @@ export default function TelegramLogin() {
     // Inject the script
     const script = document.createElement("script");
     script.src = "https://telegram.org/js/telegram-widget.js?22";
-    // CRITICAL: This name must match the Bot Name you set in BotFather
-    script.setAttribute("data-telegram-login", process.env.NEXT_PUBLIC_TELEGRAM_BOT_NAME || "SavvifyBot");
+    script.setAttribute("data-telegram-login", process.env.NEXT_PUBLIC_TELEGRAM_BOT_NAME || "FinanceBot");
     script.setAttribute("data-size", "large");
     script.setAttribute("data-radius", "8");
     script.setAttribute("data-onauth", "onTelegramAuth(user)");
@@ -60,6 +65,12 @@ export default function TelegramLogin() {
       wrapperRef.current.innerHTML = ""; // Clear previous renders
       wrapperRef.current.appendChild(script);
     }
+
+    // Cleanup function
+    return () => {
+      // @ts-ignore
+      delete window.onTelegramAuth;
+    };
   }, [router]);
 
   return (
@@ -70,11 +81,25 @@ export default function TelegramLogin() {
           <span className="text-sm font-medium">Verifying coordinates...</span>
         </div>
       ) : (
-        <div ref={wrapperRef} className="min-h-[40px] flex justify-center w-full" />
+        <>
+          <div ref={wrapperRef} className="min-h-[40px] flex justify-center w-full" />
+
+          {error && (
+            <div className="w-full p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-sm text-red-700 text-center">{error}</p>
+            </div>
+          )}
+
+          <div className="text-center space-y-2">
+            <p className="text-xs text-helm-ocean/60">
+              Click the button above to log in with Telegram
+            </p>
+            <p className="text-xs text-helm-ocean/60">
+              A popup will open - approve the login request
+            </p>
+          </div>
+        </>
       )}
-      <p className="text-xs text-helm-ocean/60 text-center">
-        Securely connect using your existing Telegram account.
-      </p>
     </div>
   );
 }
