@@ -2,58 +2,63 @@ import React from 'react';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Terms of Service | Helm',
+  title: 'Privacy Policy | Savvify',
 };
 
-export default function TermsPage() {
+export default function PrivacyPage() {
   return (
     <>
-      <h1>Terms of Service</h1>
+      <h1>Privacy Policy</h1>
       <p className="lead">Last Updated: November 2025</p>
 
-      <h2>1. Acceptance of Terms</h2>
       <p>
-        By accessing or using Savvify by Helm (via the Telegram Bot or Web Dashboard), you agree to be bound by these Terms. If you do not agree, you may not use our services.
+        At Savvify ("we", "our", or "us"), we provide financial tracking services via Telegram and our web dashboard. This Privacy Policy explains how we collect, use, and protect your information. Our core principle is simple: <strong>Your data belongs to you.</strong>
       </p>
 
-      <h2>2. Description of Service</h2>
-      <p>
-        Savvify is a personal finance navigation tool that allows users to track income, expenses, and debts via natural language input on Telegram and a visual web dashboard.
-      </p>
-
-      <h2>3. Telegram Integration</h2>
-      <p>
-        Our service relies on the Telegram messaging platform. By using Savvify, you acknowledge that:
-      </p>
+      <h2>1. Information We Collect</h2>
+      <p>We collect only the information necessary to provide our services:</p>
       <ul>
-        <li>We do not control Telegram and are not responsible for its availability or security.</li>
-        <li>Messages sent to our bot are processed by our servers to extract financial data.</li>
-        <li>You are responsible for securing your Telegram account to prevent unauthorized access to your financial logs.</li>
+        <li><strong>Identity Data:</strong> Telegram User ID, display name, and (if provided) email address.</li>
+        <li><strong>Financial Data:</strong> Transaction details (amounts, currencies, categories, descriptions) and debt records (IOUs) you explicitly log into the system.</li>
+        <li><strong>Usage Data:</strong> Logs of how you interact with our bot and dashboard to help us improve stability and security.</li>
       </ul>
 
-      <h2>4. User Accounts</h2>
+      <h2>2. How We Use Your Information</h2>
+      <p>We process your data to:</p>
+      <ul>
+        <li>Provide the Savvify budgeting service and visualize your financial status.</li>
+        <li>Sync your data between the Telegram Bot and Web Dashboard.</li>
+        <li>Send you requested alerts (e.g., daily reminders).</li>
+        <li>Detect and prevent fraud or abuse of our systems.</li>
+      </ul>
+
+      <h2>3. The Zero-Access Guarantee</h2>
       <p>
-        You are responsible for maintaining the confidentiality of your account credentials (email/password) and for all activities that occur under your account. You must notify us immediately of any unauthorized use.
+        We have a strict internal policy regarding your Financial Data. Our employees do not access your specific transaction or debt logs unless:
+      </p>
+      <ul>
+        <li>You explicitly grant us permission to resolve a specific support ticket.</li>
+        <li>We are compelled by a valid legal order.</li>
+      </ul>
+      <p>We do not sell, rent, or trade your personal data to third parties for marketing purposes.</p>
+
+      <h2>4. Data Storage & Security</h2>
+      <p>
+        Your data is stored in secure databases protected by industry-standard encryption. Data in transit is encrypted via TLS. While we strive to protect your data, no digital storage is impenetrable, and we encourage you to use strong passwords where applicable.
       </p>
 
-      <h2>5. Subscriptions & Billing</h2>
-      <p>
-        Some features of Savvify ("Premium Navigation") require a paid subscription. By subscribing, you agree to pay the fees indicated. Payments are processed by our third-party provider, Stripe. You may cancel your subscription at any time via the Billing portal.
-      </p>
+      <h2>5. Your Rights</h2>
+      <p>Under applicable laws, you have the right to:</p>
+      <ul>
+        <li><strong>Access:</strong> Request a copy of all data we hold about you.</li>
+        <li><strong>Rectification:</strong> Correct inaccurate data directly via the dashboard.</li>
+        <li><strong>Erasure:</strong> Request deletion of your account and all associated data.</li>
+        <li><strong>Portability:</strong> Export your transaction history via the Settings page.</li>
+      </ul>
 
-      <h2>6. Disclaimer of Warranties</h2>
+      <h2>6. Contact Us</h2>
       <p>
-        Savvify is provided "as is" and "as available." While we strive for accuracy, we do not guarantee that the service will be error-free or that your financial data calculations will be perfectly accurate. Savvify is a tool for guidance, not professional financial or tax advice.
-      </p>
-
-      <h2>7. Termination</h2>
-      <p>
-        We reserve the right to suspend or terminate your account if you violate these Terms or use the service for illegal activities.
-      </p>
-
-      <h2>8. Changes to Terms</h2>
-      <p>
-        We may modify these Terms at any time. Continued use of the service constitutes acceptance of the modified Terms.
+        If you have questions about your privacy, please contact our Data Protection Officer at privacy@savvify.com.
       </p>
     </>
   );

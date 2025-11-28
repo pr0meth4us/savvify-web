@@ -1,7 +1,6 @@
 import axios from "axios";
 import { getSession } from "next-auth/react";
 
-// We use the environment variable for the backend URL
 const baseURL = process.env.NEXT_PUBLIC_API_URL;
 
 const api = axios.create({
@@ -24,11 +23,7 @@ api.interceptors.request.use(
         config.headers.Authorization = `Bearer ${session.accessToken}`;
       }
     }
-    // 2. Server-side usage
-    // Note: When using this api instance in Server Components, you must generally
-    // pass the token manually or use a wrapper that calls auth().
-    // This interceptor primarily serves Client Components.
-
+    // 2. Server-side usage: Pass token manually or via server helper
     return config;
   },
   (error) => Promise.reject(error)
@@ -36,17 +31,13 @@ api.interceptors.request.use(
 
 /**
  * Response Interceptor
- * Handles 401 errors globally to steer users back to login if session expires.
+ * Handles 401 errors globally to redirect users back to login if session expires.
  */
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response?.status === 401) {
-      // Token expired or invalid coordinates
-      // We could trigger a sign-out here if we were on the client
       if (typeof window !== "undefined") {
-        // Ideally, use signOut() from next-auth/react, but we avoid circular deps here.
-        // Redirecting manually is a safe fallback.
         window.location.href = "/login";
       }
     }

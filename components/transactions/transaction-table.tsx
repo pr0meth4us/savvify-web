@@ -16,7 +16,6 @@ interface TransactionTableProps {
 export function TransactionTable({ data, onEdit, onDelete, isLoading }: TransactionTableProps) {
   const [search, setSearch] = useState("");
 
-  // Client-side filtering for speed
   const filteredData = data.filter(
     (tx) =>
       tx.description?.toLowerCase().includes(search.toLowerCase()) ||
@@ -24,14 +23,14 @@ export function TransactionTable({ data, onEdit, onDelete, isLoading }: Transact
   );
 
   if (isLoading) {
-    return <div className="p-8 text-center text-helm-ocean animate-pulse">Loading flight logs...</div>;
+    return <div className="p-8 text-center text-slate-500 animate-pulse">Loading transactions...</div>;
   }
 
   if (data.length === 0) {
     return (
-      <div className="p-12 text-center border-2 border-dashed border-helm-fog-dark rounded-xl">
-        <p className="text-helm-ocean mb-4">No transactions recorded yet.</p>
-        <p className="text-sm text-gray-400">Start charting your course by adding an expense or income.</p>
+      <div className="p-12 text-center border-2 border-dashed border-slate-200 rounded-xl">
+        <p className="text-slate-600 mb-4">No transactions recorded yet.</p>
+        <p className="text-sm text-gray-400">Add an expense or income to get started.</p>
       </div>
     );
   }
@@ -42,7 +41,7 @@ export function TransactionTable({ data, onEdit, onDelete, isLoading }: Transact
       <div className="relative max-w-sm">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
         <Input
-          placeholder="Search logs..."
+          placeholder="Search..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="pl-10"
@@ -50,25 +49,25 @@ export function TransactionTable({ data, onEdit, onDelete, isLoading }: Transact
       </div>
 
       {/* Table */}
-      <div className="overflow-hidden rounded-lg border border-helm-fog-dark bg-white shadow-sm">
+      <div className="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm">
         <table className="w-full text-left text-sm">
-          <thead className="bg-helm-fog border-b border-helm-fog-dark">
+          <thead className="bg-slate-50 border-b border-slate-200">
           <tr>
-            <th className="px-4 py-3 font-medium text-helm-navy">Date</th>
-            <th className="px-4 py-3 font-medium text-helm-navy">Category</th>
-            <th className="px-4 py-3 font-medium text-helm-navy">Description</th>
-            <th className="px-4 py-3 font-medium text-helm-navy text-right">Amount</th>
-            <th className="px-4 py-3 font-medium text-helm-navy text-right">Actions</th>
+            <th className="px-4 py-3 font-medium text-slate-700">Date</th>
+            <th className="px-4 py-3 font-medium text-slate-700">Category</th>
+            <th className="px-4 py-3 font-medium text-slate-700">Description</th>
+            <th className="px-4 py-3 font-medium text-slate-700 text-right">Amount</th>
+            <th className="px-4 py-3 font-medium text-slate-700 text-right">Actions</th>
           </tr>
           </thead>
-          <tbody className="divide-y divide-helm-fog-dark">
+          <tbody className="divide-y divide-slate-200">
           {filteredData.map((tx) => (
-            <tr key={tx._id} className="hover:bg-helm-fog/50 transition-colors group">
+            <tr key={tx._id} className="hover:bg-slate-50 transition-colors group">
               <td className="px-4 py-3 text-gray-600 whitespace-nowrap">
                 {format(new Date(tx.timestamp), "MMM dd, yyyy")}
               </td>
               <td className="px-4 py-3">
-                  <span className="inline-flex items-center rounded-full bg-helm-fog px-2.5 py-0.5 text-xs font-medium text-helm-ocean">
+                  <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-700">
                     {tx.categoryId}
                   </span>
               </td>
@@ -77,7 +76,7 @@ export function TransactionTable({ data, onEdit, onDelete, isLoading }: Transact
               </td>
               <td className="px-4 py-3 text-right whitespace-nowrap">
                 <div className="flex items-center justify-end gap-2">
-                    <span className={tx.type === 'income' ? 'text-green-600' : 'text-helm-navy'}>
+                    <span className={tx.type === 'income' ? 'text-green-600' : 'text-slate-900'}>
                       {tx.type === 'income' ? '+' : '-'}{tx.amount.toLocaleString()} {tx.currency}
                     </span>
                   {tx.type === 'income' ? (
@@ -89,7 +88,7 @@ export function TransactionTable({ data, onEdit, onDelete, isLoading }: Transact
               </td>
               <td className="px-4 py-3 text-right">
                 <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button onClick={() => onEdit(tx)} className="p-1 text-gray-400 hover:text-helm-ocean">
+                  <button onClick={() => onEdit(tx)} className="p-1 text-gray-400 hover:text-blue-600">
                     <Edit2 className="h-4 w-4" />
                   </button>
                   <button onClick={() => onDelete(tx._id)} className="p-1 text-gray-400 hover:text-red-500">

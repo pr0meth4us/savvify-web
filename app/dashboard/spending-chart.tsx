@@ -8,14 +8,13 @@ interface ChartData {
   value: number;
 }
 
-const COLORS = ['#0A2540', '#2E5C8A', '#4ECDC4', '#FFB84D', '#E8EDF5'];
+const COLORS = ['#0f172a', '#334155', '#475569', '#64748b', '#94a3b8'];
 
 export function SpendingChart({ data }: { data: ChartData[] }) {
-  // Handle empty data
   if (!data || data.length === 0) {
     return (
       <Card className="h-[350px] flex flex-col items-center justify-center text-gray-400">
-        <p>No navigational data available yet.</p>
+        <p>No data available yet.</p>
       </Card>
     );
   }
@@ -43,7 +42,7 @@ export function SpendingChart({ data }: { data: ChartData[] }) {
             </Pie>
             <Tooltip
               formatter={(value: number) => [`$${value.toLocaleString()}`, "Amount"]}
-              contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #E8EDF5' }}
+              contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e2e8f0' }}
             />
             <Legend verticalAlign="bottom" height={36} />
           </PieChart>

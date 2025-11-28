@@ -5,8 +5,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="96c15fb9-048b-4717-8d22-6ea6afd2a399" name="Changes" comment="auth update">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/login/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/login/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(legal)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(legal)/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(legal)/privacy/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(legal)/privacy/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(legal)/terms/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(legal)/terms/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(public)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(public)/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(public)/pricing/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(public)/pricing/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/spending-chart.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/spending-chart.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/transactions/transaction-table.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/transactions/transaction-table.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/ui/PublicFooter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ui/PublicFooter.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/ui/PublicHeader.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ui/PublicHeader.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/api.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/api.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -140,6 +151,7 @@
       <workItem from="1764330096949" duration="1235000" />
       <workItem from="1764345566578" duration="1783000" />
       <workItem from="1764348066181" duration="441000" />
+      <workItem from="1764348908673" duration="303000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <option name="closed" value="true" />
