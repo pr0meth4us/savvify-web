@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import api from "@/lib/api";
@@ -36,14 +35,23 @@ export default function CompleteProfilePage() {
       // Calls the Flask Proxy: POST /auth/request-email-otp
       const res = await api.post("/auth/request-email-otp", { email });
 
+      console.log("OTP Request Response:", res.data); // DEBUG: Check what backend returns
+
+      // Handle potential casing mismatch (snake_case vs camelCase)
+      const id = res.data.verification_id || res.data.verificationId;
+
+      if (!id) {
+        throw new Error("Server did not return a valid verification ID.");
+      }
+
       // Store the verification ID for the next step
-      setVerificationId(res.data.verification_id);
+      setVerificationId(id);
 
       // Move to Step 2
       setStep("OTP");
     } catch (err: any) {
       console.error(err);
-      setError(err.response?.data?.error || "Failed to send verification code. Please check the email.");
+      setError(err.response?.data?.error || err.message || "Failed to send verification code. Please check the email.");
     } finally {
       setLoading(false);
     }
@@ -55,6 +63,8 @@ export default function CompleteProfilePage() {
     setLoading(true);
     setError("");
 
+    console.log("Submitting OTP:", { verification_id: verificationId, code: otpCode }); // DEBUG
+
     try {
       // Calls the Flask Proxy: POST /auth/verify-email-otp
       const res = await api.post("/auth/verify-email-otp", {
@@ -63,7 +73,7 @@ export default function CompleteProfilePage() {
       });
 
       // Store the signed proof token. This is the key to setting the password.
-      setProofToken(res.data.proof_token);
+      setProofToken(res.data.proof_token || res.data.proofToken);
 
       // Move to Step 3
       setStep("PASSWORD");
