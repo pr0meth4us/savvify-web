@@ -4,17 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="96c15fb9-048b-4717-8d22-6ea6afd2a399" name="Changes" comment="new looks">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(legal)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(legal)/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(legal)/privacy/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(legal)/privacy/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(legal)/terms/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(legal)/terms/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(public)/pricing/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(public)/pricing/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/debts/debt-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/debts/debt-modal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/debts/repayment-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/debts/repayment-modal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/transactions/transaction-modal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/transactions/transaction-modal.tsx" afterDir="false" />
-    </list>
+    <list default="true" id="96c15fb9-048b-4717-8d22-6ea6afd2a399" name="Changes" comment="new looks" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -131,7 +121,7 @@
       <workItem from="1763556977376" duration="3066000" />
       <workItem from="1763565353740" duration="757000" />
       <workItem from="1765175056474" duration="1339000" />
-      <workItem from="1765179284484" duration="1511000" />
+      <workItem from="1765179284484" duration="1884000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <option name="closed" value="true" />
@@ -173,7 +163,15 @@
       <option name="project" value="LOCAL" />
       <updated>1765175863005</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="new looks">
+      <option name="closed" value="true" />
+      <created>1765181448247</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1765181448247</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

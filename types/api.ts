@@ -66,11 +66,13 @@ export interface AnalyticsSummary {
 export interface ExpenseBreakdown {
   category: string;
   totalUSD: number;
+  [key: string]: any; // <--- REQUIRED FOR RECHARTS
 }
 
 export interface SpendingPoint {
   date: string;
   total_spent_usd: number;
+  [key: string]: any; // <--- REQUIRED FOR RECHARTS
 }
 
 export interface AnalyticsReport {
