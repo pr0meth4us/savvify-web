@@ -54,3 +54,58 @@ export interface SummaryResponse {
     debts_owed_to_you: Array<{ total: number; _id: string }>;
     periods: Record<string, any>; // Simplified for now
 }
+
+export interface AnalyticsSummary {
+  totalIncomeUSD: number;
+  totalExpenseUSD: number;
+  netSavingsUSD: number;
+  balanceAtStartUSD: number;
+  balanceAtEndUSD: number;
+}
+
+export interface ExpenseBreakdown {
+  category: string;
+  totalUSD: number;
+}
+
+export interface SpendingPoint {
+  date: string;
+  total_spent_usd: number;
+}
+
+export interface AnalyticsReport {
+  startDate: string;
+  endDate: string;
+  summary: AnalyticsSummary;
+  expenseBreakdown: ExpenseBreakdown[];
+  incomeBreakdown: ExpenseBreakdown[];
+  spendingOverTime: SpendingPoint[];
+  financialSummary: {
+    totalLentUSD: number;
+    totalBorrowedUSD: number;
+    totalRepaidToYouUSD: number;
+    totalYouRepaidUSD: number;
+  };
+}
+
+export interface UserProfile {
+  account_id: string;
+  name_en?: string;
+  name_km?: string;
+  email?: string;
+  settings: {
+    language: string;
+    currency_mode: 'single' | 'dual';
+    primary_currency?: string;
+    rate_preference: 'live' | 'fixed';
+    fixed_rate: number;
+    initial_balances: {
+      USD: number;
+      KHR: number;
+    };
+    categories: {
+      expense: string[];
+      income: string[];
+    };
+  };
+}

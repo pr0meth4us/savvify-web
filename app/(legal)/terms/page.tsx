@@ -2,64 +2,58 @@ import React from 'react';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | Savvify',
+  title: 'Terms of Service | Savvify',
 };
 
-export default function PrivacyPage() {
+export default function TermsPage() {
   return (
-    <>
-      <h1>Privacy Policy</h1>
-      <p className="lead">Last Updated: November 2025</p>
+    <article className="prose prose-slate prose-lg max-w-none prose-headings:font-bold prose-headings:text-slate-900 prose-p:text-slate-600 prose-a:text-indigo-600 hover:prose-a:text-indigo-500">
+      <div className="mb-10 border-b border-slate-100 pb-10">
+        <span className="inline-block rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600 mb-4">
+          Effective Date: December 2025
+        </span>
+        <h1 className="mb-4 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
+          Terms of Service
+        </h1>
+        <p className="text-xl text-slate-500 leading-relaxed">
+          Please read these terms carefully before using Savvify.
+        </p>
+      </div>
 
+      <h3>1. Acceptance of Terms</h3>
       <p>
-        At Savvify ("we", "our", or "us"), we provide financial tracking services via Telegram and our web dashboard. This Privacy Policy explains how we collect, use, and protect your information. Our core principle is simple: <strong>Your data belongs to you.</strong>
+        By accessing or using the Savvify Telegram Bot or Web Dashboard ("Services"), you agree to be bound by these Terms. If you disagree with any part of the terms, you may not access the Services.
       </p>
 
-      <h2>1. Information We Collect</h2>
-      <p>We collect only the information necessary to provide our services:</p>
-      <ul>
-        <li><strong>Identity Data:</strong> Telegram User ID, display name, and (if provided) email address.</li>
-        <li><strong>Financial Data:</strong> Transaction details (amounts, currencies, categories, descriptions) and debt records (IOUs) you explicitly log into the system.</li>
-        <li><strong>Usage Data:</strong> Logs of how you interact with our bot and dashboard to help us improve stability and security.</li>
-      </ul>
-
-      <h2>2. How We Use Your Information</h2>
-      <p>We process your data to:</p>
-      <ul>
-        <li>Provide the Savvify budgeting service and visualize your financial status.</li>
-        <li>Sync your data between the Telegram Bot and Web Dashboard.</li>
-        <li>Send you requested alerts (e.g., daily reminders).</li>
-        <li>Detect and prevent fraud or abuse of our systems.</li>
-      </ul>
-
-      <h2>3. The Zero-Access Guarantee</h2>
+      <h3>2. Accounts</h3>
       <p>
-        We have a strict internal policy regarding your Financial Data. Our employees do not access your specific transaction or debt logs unless:
-      </p>
-      <ul>
-        <li>You explicitly grant us permission to resolve a specific support ticket.</li>
-        <li>We are compelled by a valid legal order.</li>
-      </ul>
-      <p>We do not sell, rent, or trade your personal data to third parties for marketing purposes.</p>
-
-      <h2>4. Data Storage & Security</h2>
-      <p>
-        Your data is stored in secure databases protected by industry-standard encryption. Data in transit is encrypted via TLS. While we strive to protect your data, no digital storage is impenetrable, and we encourage you to use strong passwords where applicable.
+        When you create an account with us, you must provide us with information that is accurate, complete, and current at all times. Failure to do so constitutes a breach of the Terms, which may result in immediate termination of your account on our Service.
       </p>
 
-      <h2>5. Your Rights</h2>
-      <p>Under applicable laws, you have the right to:</p>
-      <ul>
-        <li><strong>Access:</strong> Request a copy of all data we hold about you.</li>
-        <li><strong>Rectification:</strong> Correct inaccurate data directly via the dashboard.</li>
-        <li><strong>Erasure:</strong> Request deletion of your account and all associated data.</li>
-        <li><strong>Portability:</strong> Export your transaction history via the Settings page.</li>
-      </ul>
-
-      <h2>6. Contact Us</h2>
+      <h3>3. Subscriptions</h3>
       <p>
-        If you have questions about your privacy, please contact our Data Protection Officer at privacy@savvify.com.
+        Some parts of the Service are billed on a subscription basis ("Subscription(s)"). You will be billed in advance on a recurring and periodic basis ("Billing Cycle"). Billing cycles are set either on a monthly or annual basis, depending on the type of subscription plan you select when purchasing a Subscription.
       </p>
-    </>
+
+      <h3>4. Termination</h3>
+      <p>
+        We may terminate or suspend access to our Service immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms.
+      </p>
+
+      <h3>5. Limitation of Liability</h3>
+      <p>
+        In no event shall Savvify, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from (i) your access to or use of or inability to access or use the Service; (ii) any conduct or content of any third party on the Service.
+      </p>
+
+      <h3>6. Changes</h3>
+      <p>
+        We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material we will try to provide at least 30 days notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion.
+      </p>
+
+      <h3>7. Contact Us</h3>
+      <p>
+        If you have any questions about these Terms, please contact us at <a href="mailto:support@savvify.com">support@savvify.com</a>.
+      </p>
+    </article>
   );
 }

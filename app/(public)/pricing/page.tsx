@@ -1,130 +1,89 @@
-import { Button } from '@/components/ui/Button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/Card';
 import Link from 'next/link';
-
-function CheckIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 20 20"
-      fill="currentColor"
-      className="h-5 w-5"
-      {...props}
-    >
-      <path
-        fillRule="evenodd"
-        d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075L4.152 12.348a.75.75 0 011.052-1.143l2.803 3.555 7.4-9.717a.75.75 0 011.052-.143z"
-        clipRule="evenodd"
-      />
-    </svg>
-  );
-}
-
-const features = [
-  'Natural language logging',
-  'Multi-currency tracking',
-  'Advanced IOU/Debt tracking',
-  'Unlimited custom categories',
-  'Advanced analytics & reports',
-  'Full data export',
-];
+import { Button } from '@/components/ui/Button';
+import { Check } from 'lucide-react';
 
 export default function PricingPage() {
   return (
-    <div className="py-24 sm:py-32">
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="max-w-2xl mx-auto text-center">
-          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
-            Simple, transparent pricing.
+    <div className="bg-zinc-50 min-h-screen py-24">
+      <div className="container mx-auto max-w-5xl px-4">
+
+        {/* Header */}
+        <div className="text-center mb-16">
+          <h1 className="text-4xl md:text-5xl font-bold text-zinc-900 tracking-tight mb-6">
+            Simple, honest pricing.
           </h1>
-          <p className="mt-6 text-lg leading-8 text-slate-600">
-            One plan, all features. Try Savvify free for one month, then
-            choose the plan that works for you.
+          <p className="text-xl text-zinc-500 max-w-2xl mx-auto">
+            We don't do "Basic" or "Pro" tiers. You get everything.
+            <br />
+            <span className="text-indigo-600 font-medium">Try it free for 30 days.</span>
           </p>
         </div>
 
-        <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:max-w-3xl lg:mx-auto">
-          {/* Monthly Plan */}
-          <Card className="flex flex-col">
-            <CardHeader>
-              <CardTitle>Monthly</CardTitle>
-              <CardDescription>
-                All features, billed monthly.
-              </CardDescription>
-              <div className="pt-4">
-                                <span className="text-4xl font-bold text-slate-900">
-                                  $5
-                                </span>
-                <span className="text-slate-500"> / month</span>
-              </div>
-            </CardHeader>
-            <CardContent className="flex-grow">
-              <h3 className="font-semibold text-slate-900 mb-4">
-                Includes all features:
-              </h3>
-              <ul className="space-y-2 text-sm text-slate-600">
-                {features.map((feature) => (
-                  <FeatureItem key={feature}>{feature}</FeatureItem>
-                ))}
-              </ul>
-            </CardContent>
-            <div className="p-6 pt-0">
-              <Button variant="outline" className="w-full" asChild>
-                <Link href="/signup">Start Free Trial</Link>
-              </Button>
-            </div>
-          </Card>
+        {/* Pricing Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
 
-          {/* Yearly Plan */}
-          <Card className="flex flex-col ring-2 ring-blue-500 relative">
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-blue-500 px-3 py-1 text-sm font-semibold text-white">
-              Save 20%
-            </div>
-            <CardHeader>
-              <CardTitle>Yearly</CardTitle>
-              <CardDescription>
-                All features, billed annually.
-              </CardDescription>
-              <div className="pt-4">
-                                <span className="text-4xl font-bold text-slate-900">
-                                  $48
-                                </span>
-                <span className="text-slate-500"> / year</span>
+          {/* Monthly Card */}
+          <div className="bg-white rounded-3xl p-8 border border-zinc-200 shadow-sm flex flex-col relative overflow-hidden">
+            <div className="mb-6">
+              <h3 className="text-lg font-bold text-zinc-500 uppercase tracking-wider">Monthly</h3>
+              <div className="flex items-baseline gap-1 mt-2">
+                <span className="text-4xl font-bold text-zinc-900">$5</span>
+                <span className="text-zinc-400">/mo</span>
               </div>
-            </CardHeader>
-            <CardContent className="flex-grow">
-              <h3 className="font-semibold text-slate-900 mb-4">
-                Includes all features:
-              </h3>
-              <ul className="space-y-2 text-sm text-slate-600">
-                {features.map((feature) => (
-                  <FeatureItem key={feature}>{feature}</FeatureItem>
-                ))}
-              </ul>
-            </CardContent>
-            <div className="p-6 pt-0">
-              <Button variant="primary" className="w-full" asChild>
-                <Link href="/signup">Start Free Trial</Link>
-              </Button>
+              <p className="text-sm text-zinc-400 mt-2">Billed monthly. Cancel anytime.</p>
             </div>
-          </Card>
+
+            <ul className="space-y-4 mb-8 flex-1">
+              <Feature text="Full Transaction History" />
+              <Feature text="Unlimited Telegram Sync" />
+              <Feature text="Advanced Analytics" />
+            </ul>
+
+            <Button size="lg" variant="outline" className="w-full rounded-xl" asChild>
+              <Link href="/signup">Start Monthly Trial</Link>
+            </Button>
+          </div>
+
+          {/* Yearly Card (Highlighted) */}
+          <div className="bg-zinc-900 rounded-3xl p-8 shadow-xl flex flex-col relative overflow-hidden text-white transform md:-translate-y-4">
+            <div className="absolute top-0 right-0 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl">
+              MOST POPULAR
+            </div>
+
+            <div className="mb-6">
+              <h3 className="text-lg font-bold text-indigo-300 uppercase tracking-wider">Yearly</h3>
+              <div className="flex items-baseline gap-1 mt-2">
+                <span className="text-4xl font-bold text-white">$48</span>
+                <span className="text-zinc-400">/yr</span>
+              </div>
+              <p className="text-sm text-zinc-400 mt-2">Save 20% compared to monthly.</p>
+            </div>
+
+            <ul className="space-y-4 mb-8 flex-1">
+              <Feature text="Everything in Monthly" dark />
+              <Feature text="Priority Support" dark />
+              <Feature text="Early Access to New Features" dark />
+            </ul>
+
+            <Button size="lg" className="w-full rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white border-0" asChild>
+              <Link href="/signup">Start Yearly Trial</Link>
+            </Button>
+            <p className="text-center text-xs text-zinc-500 mt-3">30-day money-back guarantee</p>
+          </div>
+
         </div>
       </div>
     </div>
   );
 }
 
-function FeatureItem({ children }: { children: React.ReactNode }) {
+function Feature({ text, dark = false }: { text: string, dark?: boolean }) {
   return (
-    <li className="flex items-center gap-2">
-      <CheckIcon className="h-5 w-5 text-emerald-500" />
-      <span>{children}</span>
+    <li className="flex items-center gap-3">
+      <div className={`rounded-full p-1 ${dark ? 'bg-indigo-500/20 text-indigo-300' : 'bg-green-100 text-green-600'}`}>
+        <Check className="w-3 h-3" strokeWidth={3} />
+      </div>
+      <span className={dark ? 'text-zinc-300' : 'text-zinc-600'}>{text}</span>
     </li>
-  );
+  )
 }

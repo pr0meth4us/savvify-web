@@ -191,7 +191,7 @@ export default async function Dashboard() {
       <section>
         <div className="flex items-center justify-between px-2 mb-4">
           <h2 className="text-lg font-bold text-zinc-900">Monthly Insight</h2>
-          <Link href="/transactions" className="text-sm font-medium text-indigo-600 hover:text-indigo-700">
+          <Link href="/analytics" className="text-sm font-medium text-indigo-600 hover:text-indigo-700">
             View Report →
           </Link>
         </div>

@@ -134,7 +134,6 @@ export function TransactionModal({ isOpen, onClose, onSuccess, initialData }: Tr
               >
                 <option value="USD">USD ($)</option>
                 <option value="KHR">KHR (៛)</option>
-                <option value="THB">THB (฿)</option>
               </select>
             </div>
           </div>
