@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="96c15fb9-048b-4717-8d22-6ea6afd2a399" name="Changes" comment="lannguague" />
+    <list default="true" id="96c15fb9-048b-4717-8d22-6ea6afd2a399" name="Changes" comment="version">
+      <change afterPath="$PROJECT_DIR$/components/ui/Logo.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/dashboard/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/dashboard/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/globals.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/layout/mobile-header.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/layout/mobile-header.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/layout/sidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/layout/sidebar.tsx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -28,12 +35,12 @@
     &quot;assignee&quot;: &quot;pr0meth4us&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/pr0meth4us/savvify-web.git&quot;,
-    &quot;accountId&quot;: &quot;a50de781-2c66-4423-9a97-6f9c898f8414&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/pr0meth4us/savvify-web.git",
+    "accountId": "fba20cae-fae3-4b31-9679-b380dce2079c"
   }
-}</component>
+}]]></component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -45,35 +52,28 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/nick/code/finance-bot&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;npm.Next.js: server-side.executor&quot;: &quot;Run&quot;,
-    &quot;npm.build.executor&quot;: &quot;Run&quot;,
-    &quot;npm.dev.executor&quot;: &quot;Run&quot;,
-    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/home/nick/code/savvify-frontend/node_modules/prettier&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;/home/nick/code/savvify-frontend/node_modules/typescript/lib&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "/home/nick/code/savvify-frontend",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "npm.Next.js: server-side.executor": "Run",
+    "npm.dev.executor": "Run",
+    "prettierjs.PrettierConfiguration.Package": "C:\\Users\\Surface\\WebstormProjects\\savvify-web\\node_modules\\prettier",
+    "to.speed.mode.migration.done": "true",
+    "ts.external.directory.path": "C:\\Users\\Surface\\WebstormProjects\\savvify-web\\node_modules\\typescript\\lib",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/app/dashboard" />
-      <recent name="$PROJECT_DIR$/components" />
-      <recent name="$PROJECT_DIR$/components/auth" />
-    </key>
-  </component>
+}]]></component>
   <component name="RunManager" selected="npm.Next.js: server-side">
     <configuration name="Next.js: debug client-side" type="JavascriptDebugType" uri="http://localhost:3000/">
       <method v="2" />
@@ -88,18 +88,8 @@
       <envs />
       <method v="2" />
     </configuration>
-    <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="build" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
     <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/../savvify-fronten/package.json" />
+      <package-json value="$PROJECT_DIR$/../savvify-frontend/package.json" />
       <command value="run" />
       <scripts>
         <script value="dev" />
@@ -111,7 +101,6 @@
     <recent_temporary>
       <list>
         <item itemvalue="npm.dev" />
-        <item itemvalue="npm.build" />
       </list>
     </recent_temporary>
   </component>
@@ -132,12 +121,8 @@
       <workItem from="1762844827700" duration="4625000" />
       <workItem from="1763554240536" duration="470000" />
       <workItem from="1763556977376" duration="3066000" />
-      <workItem from="1763565353740" duration="5054000" />
-      <workItem from="1763992922159" duration="5280000" />
-      <workItem from="1764330096949" duration="1235000" />
-      <workItem from="1764345566578" duration="1783000" />
-      <workItem from="1764348066181" duration="441000" />
-      <workItem from="1764348908673" duration="1062000" />
+      <workItem from="1763565353740" duration="757000" />
+      <workItem from="1765175056474" duration="179000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <option name="closed" value="true" />
@@ -147,103 +132,23 @@
       <option name="project" value="LOCAL" />
       <updated>1763554443026</updated>
     </task>
-    <task id="LOCAL-00002" summary="initial commit">
+    <task id="LOCAL-00002" summary="email link">
       <option name="closed" value="true" />
-      <created>1763566348687</created>
+      <created>1765160717306</created>
       <option name="number" value="00002" />
       <option name="presentableId" value="LOCAL-00002" />
       <option name="project" value="LOCAL" />
-      <updated>1763566348687</updated>
+      <updated>1765160717306</updated>
     </task>
-    <task id="LOCAL-00003" summary="login">
+    <task id="LOCAL-00003" summary="version">
       <option name="closed" value="true" />
-      <created>1763994070713</created>
+      <created>1765162490511</created>
       <option name="number" value="00003" />
       <option name="presentableId" value="LOCAL-00003" />
       <option name="project" value="LOCAL" />
-      <updated>1763994070713</updated>
+      <updated>1765162490511</updated>
     </task>
-    <task id="LOCAL-00004" summary="package.json">
-      <option name="closed" value="true" />
-      <created>1763994474203</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1763994474203</updated>
-    </task>
-    <task id="LOCAL-00005" summary="fix">
-      <option name="closed" value="true" />
-      <created>1763994917115</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1763994917115</updated>
-    </task>
-    <task id="LOCAL-00006" summary="fix">
-      <option name="closed" value="true" />
-      <created>1763995122708</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1763995122708</updated>
-    </task>
-    <task id="LOCAL-00007" summary="fix">
-      <option name="closed" value="true" />
-      <created>1763996962321</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1763996962321</updated>
-    </task>
-    <task id="LOCAL-00008" summary="fix">
-      <option name="closed" value="true" />
-      <created>1763997228877</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1763997228877</updated>
-    </task>
-    <task id="LOCAL-00009" summary="fix">
-      <option name="closed" value="true" />
-      <created>1763997582620</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1763997582620</updated>
-    </task>
-    <task id="LOCAL-00010" summary="fix">
-      <option name="closed" value="true" />
-      <created>1764345838029</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1764345838029</updated>
-    </task>
-    <task id="LOCAL-00011" summary="fix">
-      <option name="closed" value="true" />
-      <created>1764346369848</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1764346369848</updated>
-    </task>
-    <task id="LOCAL-00012" summary="auth update">
-      <option name="closed" value="true" />
-      <created>1764347219676</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1764347219676</updated>
-    </task>
-    <task id="LOCAL-00013" summary="lannguague">
-      <option name="closed" value="true" />
-      <created>1764349235034</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1764349235034</updated>
-    </task>
-    <option name="localTasksCounter" value="14" />
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -262,11 +167,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="initial commit" />
-    <MESSAGE value="login" />
-    <MESSAGE value="package.json" />
-    <MESSAGE value="fix" />
-    <MESSAGE value="auth update" />
-    <MESSAGE value="lannguague" />
-    <option name="LAST_COMMIT_MESSAGE" value="lannguague" />
+    <MESSAGE value="email link" />
+    <MESSAGE value="version" />
+    <option name="LAST_COMMIT_MESSAGE" value="version" />
   </component>
 </project>

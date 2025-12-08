@@ -1,29 +1,31 @@
 @import "tailwindcss";
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap");
 
 @theme {
-    /* Custom Helm color palette */
-    --color-helm-navy: #0a2540;
-    --color-helm-navy-light: #1a3a5c;
-    --color-helm-ocean: #2e5c8a;
-    --color-helm-seafoam: #4ecdc4;
-    --color-helm-horizon: #ffb84d;
-    --color-helm-fog: #f7f9fc;
-    --color-helm-fog-dark: #e8edf5;
+    /* Semantic Color Palette - Modern Fintech */
+    --color-background: #fafafa; /* Zinc 50 */
+    --color-surface: #ffffff;
 
-    /* Custom font families */
-    --font-family-sans: Inter, system-ui, sans-serif;
-    --font-family-display: Montserrat, sans-serif;
+    /* Brand Colors (Savvify Blue/Indigo) */
+    --color-primary: #4f46e5;    /* Indigo 600 */
+    --color-primary-dark: #4338ca; /* Indigo 700 */
+    --color-primary-light: #e0e7ff; /* Indigo 100 */
+
+    /* Functional Colors */
+    --color-success: #10b981;    /* Emerald 500 */
+    --color-danger: #ef4444;     /* Red 500 */
+    --color-muted: #71717a;      /* Zinc 500 */
+    --color-border: #e4e4e7;     /* Zinc 200 */
+
+    /* Typography */
+    --font-sans: Inter, system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace; /* For currency/numbers */
 }
 
 @layer base {
     body {
-        background-color: var(--color-helm-fog);
-        color: var(--color-helm-navy);
-        font-family: var(--font-family-sans);
-    }
-
-    h1, h2, h3, h4, h5, h6 {
-        font-family: var(--font-family-display);
+        background-color: var(--color-background);
+        color: #18181b; /* Zinc 950 */
+        font-family: var(--font-sans);
     }
 }
