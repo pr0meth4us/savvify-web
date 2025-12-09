@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -5,36 +7,39 @@ import { Spinner } from "@/components/ui/Spinner";
 import api from "@/lib/api";
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
-  const { data: session, status, update } = useSession(); // Import 'update'
+  const { data: session, status, update } = useSession();
   const router = useRouter();
   const pathname = usePathname();
   const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
     const checkProfile = async () => {
+      // 1. Wait for session to load
       if (status === "loading") return;
 
+      // 2. If unauthenticated, stop checking (middleware or layout usually handles redirect,
+      // but we set checking false to render nothing/children based on logic)
       if (status === "unauthenticated") {
         setIsChecking(false);
         return;
       }
 
+      // 3. If authenticated, validate backend profile state
       if (status === "authenticated") {
         try {
           const { data } = await api.get("/auth/me");
 
-          // 1. Sync Role Mismatch
-          // If backend role differs from session role, force a session update
+          // Sync Role Mismatch: If backend role changed (e.g. upgraded to premium), update session
           if (session?.user?.role !== data.role) {
-            console.log(`Syncing Role: ${session?.user?.role} -> ${data.role}`);
             await update({
               ...session,
               user: { ...session?.user, role: data.role }
             });
-            // Don't return here; let the rest of the checks proceed after update
+            // Force a reload to ensure new role permissions apply
+            router.refresh();
           }
 
-          // 2. Profile Completion Check
+          // Onboarding Check
           const isMissingEmail = !data.email;
           const isOnCompleteProfile = pathname === "/complete-profile";
 
@@ -57,7 +62,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     };
 
     checkProfile();
-  }, [status, router, pathname, session, update]); // Added dependencies
+  }, [status, router, pathname, update, session]);
 
   if (status === "loading" || isChecking) {
     return (
