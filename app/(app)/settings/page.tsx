@@ -5,10 +5,8 @@ import { UserProfile } from "@/types/api";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
-import { Trash2, Plus, Save, CreditCard, QrCode } from "lucide-react";
+import { Trash2, Plus, Save, CreditCard, MessageCircle } from "lucide-react";
 import { Spinner } from "@/components/ui/Spinner";
-import { Modal } from "@/components/ui/Modal";
-import { QRCodeSVG } from 'qrcode.react';
 
 export default function SettingsPage() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -20,18 +18,23 @@ export default function SettingsPage() {
   const [balanceKHR, setBalanceKHR] = useState("");
   const [rate, setRate] = useState("");
 
-  // Payment States
-  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
+  // Payment State
   const [paymentLoading, setPaymentLoading] = useState(false);
-  const [qrCodeData, setQrCodeData] = useState<string | null>(null);
+
+  // --- CONFIGURATION ---
+  // THIS is the only place hardcoded. The backend is generic.
+  const GUMROAD_PRODUCT_SLUG = "nmfmm";
+  const TELEGRAM_SUPPORT_USER = "HelmSupport"; // Change to your handle
 
   const fetchSettings = async () => {
     try {
       const res = await api.get<{profile: UserProfile}>("/settings/");
       setProfile(res.data.profile);
-      setBalanceUSD(res.data.profile.settings.initial_balances.USD.toString());
-      setBalanceKHR(res.data.profile.settings.initial_balances.KHR.toString());
-      setRate(res.data.profile.settings.fixed_rate.toString());
+      if(res.data.profile.settings) {
+        setBalanceUSD(res.data.profile.settings.initial_balances?.USD?.toString() || "0");
+        setBalanceKHR(res.data.profile.settings.initial_balances?.KHR?.toString() || "0");
+        setRate(res.data.profile.settings.fixed_rate?.toString() || "4100");
+      }
     } catch (error) {
       console.error("Failed to load settings", error);
     } finally {
@@ -82,25 +85,21 @@ export default function SettingsPage() {
     }
   };
 
-  // --- NEW: Handle Upgrade Logic ---
-  const handleUpgrade = async (provider: 'gumroad' | 'payway') => {
+  // --- AUTOMATED GUMROAD PAYMENT ---
+  const handleUpgrade = async () => {
     setPaymentLoading(true);
-    setQrCodeData(null);
-
     try {
       const res = await api.post("/payments/checkout", {
-        provider: provider,
-        product_id: "savvify-premium"
+        provider: "gumroad",
+        product_id: GUMROAD_PRODUCT_SLUG // Explicitly sending "nmfmm"
       });
 
       const data = res.data;
 
-      if (provider === 'gumroad' && data.payment_url) {
-        // Redirect to Gumroad
+      if (data.payment_url) {
         window.location.href = data.payment_url;
-      } else if (provider === 'payway' && data.qr_string) {
-        // Show QR Code in Modal
-        setQrCodeData(data.qr_string);
+      } else {
+        alert("Could not generate payment link. Please try again.");
       }
 
     } catch (error) {
@@ -122,7 +121,7 @@ export default function SettingsPage() {
 
       <div className="grid gap-8">
 
-        {/* --- NEW: Subscription Card --- */}
+        {/* --- SUBSCRIPTION SECTION --- */}
         <Card className="border-indigo-100 bg-indigo-50/50">
           <CardHeader>
             <div className="flex justify-between items-center">
@@ -130,16 +129,48 @@ export default function SettingsPage() {
                 <CardTitle className="text-indigo-900">Subscription Status</CardTitle>
                 <CardDescription>Unlock advanced analytics and unlimited history.</CardDescription>
               </div>
-              {/* Visual badge for current status. Note: You should ideally fetch 'role' from profile or session */}
+              {/* TODO: Check user role here to change badge */}
               <div className="px-3 py-1 bg-white rounded-full text-sm font-bold text-indigo-600 border border-indigo-200 uppercase">
                 Free Tier
               </div>
             </div>
           </CardHeader>
-          <CardContent>
-            <Button onClick={() => setIsUpgradeModalOpen(true)} variant="primary" className="bg-indigo-600 hover:bg-indigo-700 text-white">
-              Upgrade to Premium ($5/mo)
-            </Button>
+          <CardContent className="space-y-4">
+
+            {/* Option 1: Gumroad (International/Card) */}
+            <div className="bg-white p-4 rounded-xl border border-indigo-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h4 className="font-bold text-slate-900">Pay with Card / PayPal</h4>
+                <p className="text-xs text-slate-500">Instant activation via Gumroad secure checkout.</p>
+              </div>
+              <Button
+                onClick={handleUpgrade}
+                variant="primary"
+                className="bg-indigo-600 hover:bg-indigo-700 text-white shrink-0"
+                isLoading={paymentLoading}
+              >
+                <CreditCard className="w-4 h-4 mr-2" />
+                Subscribe ($5/mo)
+              </Button>
+            </div>
+
+            {/* Option 2: Manual / Local (Telegram) */}
+            <div className="bg-white p-4 rounded-xl border border-indigo-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h4 className="font-bold text-slate-900">Pay via ABA / KHQR</h4>
+                <p className="text-xs text-slate-500">Contact support to pay manually (Local Bank Transfer).</p>
+              </div>
+              <a
+                href={`https://t.me/${TELEGRAM_SUPPORT_USER}?start=upgrade_request`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center rounded-md font-medium transition-colors h-10 px-4 py-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 shrink-0"
+              >
+                <MessageCircle className="w-4 h-4 mr-2 text-blue-500" />
+                Text Support
+              </a>
+            </div>
+
           </CardContent>
         </Card>
 
@@ -153,9 +184,6 @@ export default function SettingsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Input label="Display Name (EN)" value={profile.name_en || ''} disabled />
               <Input label="Email" value={profile.email || ''} disabled />
-            </div>
-            <div className="text-xs text-slate-400">
-              To change these details, please contact support.
             </div>
           </CardContent>
         </Card>
@@ -206,9 +234,6 @@ export default function SettingsPage() {
                 />
                 <Button variant="outline" onClick={handleUpdateRate}><Save className="w-4 h-4 mr-2"/> Set</Button>
               </div>
-              <p className="text-xs text-slate-500 mt-2">
-                Currently using: <span className="font-mono font-bold text-indigo-600">{profile.settings.rate_preference.toUpperCase()}</span> rate.
-              </p>
             </div>
           </CardContent>
         </Card>
@@ -271,69 +296,6 @@ export default function SettingsPage() {
         </Card>
 
       </div>
-
-      {/* --- NEW: Payment Method Modal --- */}
-      <Modal isOpen={isUpgradeModalOpen} onClose={() => setIsUpgradeModalOpen(false)}>
-        <div className="p-6">
-          <h2 className="text-xl font-bold mb-4 text-slate-900">Choose Payment Method</h2>
-
-          {qrCodeData ? (
-            <div className="flex flex-col items-center space-y-4">
-              <div className="p-4 bg-white rounded-xl shadow-inner border border-slate-200">
-                <p className="text-xs text-center text-slate-400 break-all mb-2">Scan with ABA Mobile</p>
-                <div className="bg-white p-2">
-                  <QRCodeSVG value={qrCodeData} size={200} />
-                </div>
-              </div>
-              <p className="text-sm text-center text-emerald-600 font-medium animate-pulse">
-                Waiting for payment...
-              </p>
-              <Button variant="ghost" onClick={() => setIsUpgradeModalOpen(false)}>Close</Button>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              <button
-                onClick={() => handleUpgrade('payway')}
-                disabled={paymentLoading}
-                className="w-full flex items-center justify-between p-4 bg-white border border-slate-200 rounded-xl hover:border-indigo-500 hover:shadow-md transition-all group"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="bg-blue-600 text-white p-2 rounded-lg">
-                    <QrCode className="w-5 h-5" />
-                  </div>
-                  <div className="text-left">
-                    <p className="font-bold text-slate-900">ABA PayWay (KHQR)</p>
-                    <p className="text-xs text-slate-500">Scan with any Cambodia banking app</p>
-                  </div>
-                </div>
-              </button>
-
-              <button
-                onClick={() => handleUpgrade('gumroad')}
-                disabled={paymentLoading}
-                className="w-full flex items-center justify-between p-4 bg-white border border-slate-200 rounded-xl hover:border-indigo-500 hover:shadow-md transition-all group"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="bg-pink-500 text-white p-2 rounded-lg">
-                    <CreditCard className="w-5 h-5" />
-                  </div>
-                  <div className="text-left">
-                    <p className="font-bold text-slate-900">Credit/Debit Card</p>
-                    <p className="text-xs text-slate-500">Secure payment via Gumroad</p>
-                  </div>
-                </div>
-              </button>
-
-              {paymentLoading && (
-                <div className="flex justify-center items-center gap-2 mt-4 text-sm text-slate-500">
-                  <Spinner size="sm" /> Connecting to gateway...
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </Modal>
-
     </div>
   );
 }
