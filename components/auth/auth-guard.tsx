@@ -25,6 +25,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     const validateSession = async () => {
       try {
         // Fetch current profile from backend
+        // Note: The backend MUST return the 'email' field for this check to work
         const { data } = await api.get("/users/me");
 
         // --- ROLE SYNC ---
@@ -40,6 +41,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
         // --- ONBOARDING CHECK ---
         // Check if user needs to link an email (common for Telegram-first users)
+        // We look at the top-level email or the profile email
         const hasEmail = data.email || (data.profile && data.profile.email);
         const isOnCompleteProfile = pathname === "/complete-profile";
 
@@ -55,10 +57,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
       } catch (error) {
         console.error("[AuthGuard] Validation failed:", error);
-        // Api interceptor handles 401, but just in case:
-        if (typeof window !== "undefined" && (error as any)?.response?.status === 401) {
-          // Let the interceptor redirect
-        }
+        // If 401, the interceptor will handle it.
       } finally {
         setIsChecking(false);
       }

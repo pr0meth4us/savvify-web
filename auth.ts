@@ -55,6 +55,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               },
               {
                 headers: { "Content-Type": "application/json" },
+                // Allow specific statuses to handle them manually
                 validateStatus: (status) => status === 200 || status === 401 || status === 403 || status === 400,
               }
             );
@@ -125,15 +126,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    // 1. JWT Callback: FIX - Handle 'update' trigger
+    async jwt({ token, user, trigger, session }) {
+      // Initial sign in
       if (user) {
         token.accessToken = user.accessToken;
         token.role = user.role;
         token.userId = user.id;
         token.telegramId = user.telegramId;
       }
+
+      // Handle session updates (e.g. role sync from AuthGuard)
+      if (trigger === "update" && session) {
+        if (session.user?.role) token.role = session.user.role;
+        // Add other fields you might want to update here
+      }
+
       return token;
     },
+    // 2. Session Callback
     async session({ session, token }) {
       if (token && session.user) {
         session.accessToken = token.accessToken as string;
@@ -146,7 +157,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60,
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   secret: process.env.NEXTAUTH_SECRET,
 });
