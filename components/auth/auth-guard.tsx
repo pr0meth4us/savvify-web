@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -23,10 +22,13 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
       if (status === "authenticated") {
         try {
-          // --- FIXED: Point to the correct endpoint ---
-          const { data } = await api.get("/auth/me");
+          // --- CHANGED: Use /users/me instead of /auth/me ---
+          // This endpoint exists in your backend (users/routes.py)
+          // and returns { profile: { ... }, role: "..." }
+          const { data } = await api.get("/users/me");
 
-          const isMissingEmail = !data.email;
+          // --- CHANGED: Email is nested in the profile object ---
+          const isMissingEmail = !data.profile?.email;
           const isOnCompleteProfile = pathname === "/complete-profile";
 
           if (isMissingEmail && !isOnCompleteProfile) {
@@ -41,7 +43,9 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
         } catch (error) {
           console.error("Profile check failed", error);
-          // Optional: Redirect to login if the check strictly fails (401/404)
+          // If the server returns 401/404, we might want to let them stay
+          // or redirect to login. For now, we allow the UI to render
+          // (premium guard handles the rest).
         }
       }
 
