@@ -1,14 +1,14 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import api from "@/lib/api";
 import { UserProfile } from "@/types/api";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/Tabs"; // You might need to create this simple component or use basic buttons
-import { Trash2, Plus, Save } from "lucide-react";
+import { Trash2, Plus, Save, CreditCard, QrCode } from "lucide-react";
 import { Spinner } from "@/components/ui/Spinner";
+import { Modal } from "@/components/ui/Modal";
+import { QRCodeSVG } from 'qrcode.react';
 
 export default function SettingsPage() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
@@ -19,6 +19,11 @@ export default function SettingsPage() {
   const [balanceUSD, setBalanceUSD] = useState("");
   const [balanceKHR, setBalanceKHR] = useState("");
   const [rate, setRate] = useState("");
+
+  // Payment States
+  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
+  const [paymentLoading, setPaymentLoading] = useState(false);
+  const [qrCodeData, setQrCodeData] = useState<string | null>(null);
 
   const fetchSettings = async () => {
     try {
@@ -43,7 +48,7 @@ export default function SettingsPage() {
     try {
       await api.post("/settings/category", { type, name: newCategory });
       setNewCategory("");
-      fetchSettings(); // Refresh
+      fetchSettings();
     } catch (e) {
       console.error(e);
     }
@@ -77,6 +82,35 @@ export default function SettingsPage() {
     }
   };
 
+  // --- NEW: Handle Upgrade Logic ---
+  const handleUpgrade = async (provider: 'gumroad' | 'payway') => {
+    setPaymentLoading(true);
+    setQrCodeData(null);
+
+    try {
+      const res = await api.post("/payments/checkout", {
+        provider: provider,
+        product_id: "savvify-premium"
+      });
+
+      const data = res.data;
+
+      if (provider === 'gumroad' && data.payment_url) {
+        // Redirect to Gumroad
+        window.location.href = data.payment_url;
+      } else if (provider === 'payway' && data.qr_string) {
+        // Show QR Code in Modal
+        setQrCodeData(data.qr_string);
+      }
+
+    } catch (error) {
+      console.error("Payment failed", error);
+      alert("Failed to initialize payment. Please try again.");
+    } finally {
+      setPaymentLoading(false);
+    }
+  };
+
   if (loading || !profile) return <div className="flex justify-center p-12"><Spinner /></div>;
 
   return (
@@ -87,6 +121,27 @@ export default function SettingsPage() {
       </div>
 
       <div className="grid gap-8">
+
+        {/* --- NEW: Subscription Card --- */}
+        <Card className="border-indigo-100 bg-indigo-50/50">
+          <CardHeader>
+            <div className="flex justify-between items-center">
+              <div>
+                <CardTitle className="text-indigo-900">Subscription Status</CardTitle>
+                <CardDescription>Unlock advanced analytics and unlimited history.</CardDescription>
+              </div>
+              {/* Visual badge for current status. Note: You should ideally fetch 'role' from profile or session */}
+              <div className="px-3 py-1 bg-white rounded-full text-sm font-bold text-indigo-600 border border-indigo-200 uppercase">
+                Free Tier
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <Button onClick={() => setIsUpgradeModalOpen(true)} variant="primary" className="bg-indigo-600 hover:bg-indigo-700 text-white">
+              Upgrade to Premium ($5/mo)
+            </Button>
+          </CardContent>
+        </Card>
 
         {/* Profile Section */}
         <Card>
@@ -216,6 +271,69 @@ export default function SettingsPage() {
         </Card>
 
       </div>
+
+      {/* --- NEW: Payment Method Modal --- */}
+      <Modal isOpen={isUpgradeModalOpen} onClose={() => setIsUpgradeModalOpen(false)}>
+        <div className="p-6">
+          <h2 className="text-xl font-bold mb-4 text-slate-900">Choose Payment Method</h2>
+
+          {qrCodeData ? (
+            <div className="flex flex-col items-center space-y-4">
+              <div className="p-4 bg-white rounded-xl shadow-inner border border-slate-200">
+                <p className="text-xs text-center text-slate-400 break-all mb-2">Scan with ABA Mobile</p>
+                <div className="bg-white p-2">
+                  <QRCodeSVG value={qrCodeData} size={200} />
+                </div>
+              </div>
+              <p className="text-sm text-center text-emerald-600 font-medium animate-pulse">
+                Waiting for payment...
+              </p>
+              <Button variant="ghost" onClick={() => setIsUpgradeModalOpen(false)}>Close</Button>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              <button
+                onClick={() => handleUpgrade('payway')}
+                disabled={paymentLoading}
+                className="w-full flex items-center justify-between p-4 bg-white border border-slate-200 rounded-xl hover:border-indigo-500 hover:shadow-md transition-all group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="bg-blue-600 text-white p-2 rounded-lg">
+                    <QrCode className="w-5 h-5" />
+                  </div>
+                  <div className="text-left">
+                    <p className="font-bold text-slate-900">ABA PayWay (KHQR)</p>
+                    <p className="text-xs text-slate-500">Scan with any Cambodia banking app</p>
+                  </div>
+                </div>
+              </button>
+
+              <button
+                onClick={() => handleUpgrade('gumroad')}
+                disabled={paymentLoading}
+                className="w-full flex items-center justify-between p-4 bg-white border border-slate-200 rounded-xl hover:border-indigo-500 hover:shadow-md transition-all group"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="bg-pink-500 text-white p-2 rounded-lg">
+                    <CreditCard className="w-5 h-5" />
+                  </div>
+                  <div className="text-left">
+                    <p className="font-bold text-slate-900">Credit/Debit Card</p>
+                    <p className="text-xs text-slate-500">Secure payment via Gumroad</p>
+                  </div>
+                </div>
+              </button>
+
+              {paymentLoading && (
+                <div className="flex justify-center items-center gap-2 mt-4 text-sm text-slate-500">
+                  <Spinner size="sm" /> Connecting to gateway...
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </Modal>
+
     </div>
   );
 }
