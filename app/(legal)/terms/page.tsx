@@ -1,5 +1,6 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { Scale, AlertTriangle, Copyright, ScrollText } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Terms of Service | Savvify',
@@ -7,53 +8,123 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <article className="prose prose-slate prose-lg max-w-none prose-headings:font-bold prose-headings:text-slate-900 prose-p:text-slate-600 prose-a:text-indigo-600 hover:prose-a:text-indigo-500">
-      <div className="mb-10 border-b border-slate-100 pb-10">
-        <span className="inline-block rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600 mb-4">
-          Effective Date: December 2025
-        </span>
-        <h1 className="mb-4 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
+    <div className="max-w-4xl mx-auto">
+      {/* Header */}
+      <div className="mb-12 border-b border-slate-200 pb-8">
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl mb-4">
           Terms of Service
         </h1>
-        <p className="text-xl text-slate-500 leading-relaxed">
-          Please read these terms carefully before using Savvify.
+        <p className="text-lg text-slate-600">
+          Effective Date: December 2025
+        </p>
+        <p className="mt-4 text-sm text-slate-500">
+          Please read these terms carefully before using the Savvify Telegram Bot or Web Dashboard.
         </p>
       </div>
 
-      <h3>1. Acceptance of Terms</h3>
-      <p>
-        By accessing or using the Savvify Telegram Bot or Web Dashboard ("Services"), you agree to be bound by these Terms. If you disagree with any part of the terms, you may not access the Services.
-      </p>
+      <div className="space-y-12">
 
-      <h3>2. Accounts</h3>
-      <p>
-        When you create an account with us, you must provide us with information that is accurate, complete, and current at all times. Failure to do so constitutes a breach of the Terms, which may result in immediate termination of your account on our Service.
-      </p>
+        {/* 1. Agreement */}
+        <section className="flex gap-4 sm:gap-8">
+          <div className="hidden sm:block mt-1">
+            <div className="h-10 w-10 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600">
+              <ScrollText className="h-5 w-5" />
+            </div>
+          </div>
+          <div className="prose prose-slate max-w-none">
+            <h3 className="text-xl font-bold text-slate-900">1. Acceptance of Terms</h3>
+            <p>
+              By accessing or using Savvify ("The Service"), you agree to be bound by these Terms.
+              The Service is provided by an independent developer ("The Provider"). If you disagree with any part of the terms, you may not access the Service.
+            </p>
+          </div>
+        </section>
 
-      <h3>3. Subscriptions</h3>
-      <p>
-        Some parts of the Service are billed on a subscription basis ("Subscription(s)"). You will be billed in advance on a recurring and periodic basis ("Billing Cycle"). Billing cycles are set either on a monthly or annual basis, depending on the type of subscription plan you select when purchasing a Subscription.
-      </p>
+        {/* 2. No Financial Advice (Crucial for liability) */}
+        <section className="flex gap-4 sm:gap-8">
+          <div className="hidden sm:block mt-1">
+            <div className="h-10 w-10 rounded-lg bg-amber-50 flex items-center justify-center text-amber-600">
+              <AlertTriangle className="h-5 w-5" />
+            </div>
+          </div>
+          <div className="prose prose-slate max-w-none">
+            <h3 className="text-xl font-bold text-slate-900">2. Not Financial Advice</h3>
+            <p>
+              <strong>Savvify is a data logging and visualization tool only.</strong>
+            </p>
+            <p>
+              The Service does not provide financial, investment, tax, or legal advice. The Provider is not a financial institution or fiduciary.
+              Calculations, reports, and debt tracking features are provided for informational purposes and rely entirely on user input.
+              You are solely responsible for your financial decisions.
+            </p>
+          </div>
+        </section>
 
-      <h3>4. Termination</h3>
-      <p>
-        We may terminate or suspend access to our Service immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms.
-      </p>
+        {/* 3. Liability */}
+        <section className="flex gap-4 sm:gap-8">
+          <div className="hidden sm:block mt-1">
+            <div className="h-10 w-10 rounded-lg bg-red-50 flex items-center justify-center text-red-600">
+              <Scale className="h-5 w-5" />
+            </div>
+          </div>
+          <div className="prose prose-slate max-w-none">
+            <h3 className="text-xl font-bold text-slate-900">3. Limitation of Liability</h3>
+            <p>
+              The Service is provided on an "AS IS" and "AS AVAILABLE" basis. The Provider makes no representations or warranties of any kind,
+              express or implied, regarding the uptime, accuracy, or reliability of the Service.
+            </p>
+            <p>
+              To the maximum extent permitted by applicable law, The Provider shall not be liable for any indirect, incidental, special,
+              consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses,
+              resulting from your access to or use of the Service.
+            </p>
+          </div>
+        </section>
 
-      <h3>5. Limitation of Liability</h3>
-      <p>
-        In no event shall Savvify, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from (i) your access to or use of or inability to access or use the Service; (ii) any conduct or content of any third party on the Service.
-      </p>
+        {/* 4. Governing Law */}
+        <section className="flex gap-4 sm:gap-8">
+          <div className="hidden sm:block mt-1">
+            <div className="h-10 w-10 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600">
+              <Copyright className="h-5 w-5" />
+            </div>
+          </div>
+          <div className="prose prose-slate max-w-none">
+            <h3 className="text-xl font-bold text-slate-900">4. Governing Law</h3>
+            <p>
+              These Terms shall be governed and construed in accordance with the laws of the <strong>Kingdom of Cambodia</strong>, without regard to its conflict of law provisions.
+            </p>
+            <p>
+              Failure to enforce any right or provision of these Terms will not be considered a waiver of those rights.
+            </p>
+          </div>
+        </section>
 
-      <h3>6. Changes</h3>
-      <p>
-        We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material we will try to provide at least 30 days notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion.
-      </p>
+        {/* 5. Subscriptions */}
+        <section className="prose prose-slate max-w-none ml-0 sm:ml-[72px]">
+          <h3 className="text-xl font-bold text-slate-900">5. Subscriptions & Termination</h3>
+          <p>
+            Some parts of the Service are billed on a subscription basis. You may cancel your subscription at any time.
+            The Provider reserves the right to terminate or suspend access to the Service immediately, without prior notice,
+            for any reason, including without limitation if you breach the Terms.
+          </p>
+        </section>
 
-      <h3>7. Contact Us</h3>
-      <p>
-        If you have any questions about these Terms, please contact us at <a href="mailto:support@savvify.com">support@savvify.com</a>.
-      </p>
-    </article>
+        {/* Contact Footer */}
+        <div className="mt-16 border-t border-slate-200 pt-8">
+          <p className="text-slate-600">
+            If you have any questions about these Terms, please contact:
+          </p>
+          <div className="mt-2 flex gap-4">
+            <a href="mailto:helmthehelm@outlook.com" className="text-indigo-600 font-semibold hover:underline">
+              helmthehelm@outlook.com
+            </a>
+            <a href="https://pr0meth4us.github.io/" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-slate-600">
+              Developer Profile
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
   );
 }

@@ -1,7 +1,9 @@
+// components/ui/PublicHeader.tsx
 'use client';
 
 import Link from 'next/link';
 import { Button } from './Button';
+import { Logo } from './Logo'; // <--- Import the Logo component
 
 export function PublicHeader() {
   return (
@@ -9,9 +11,8 @@ export function PublicHeader() {
       <div className="container mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand */}
         <Link href="/" className="flex items-center gap-2">
-                    <span className="text-2xl font-bold text-slate-900 tracking-tight">
-                       Savvify
-                    </span>
+          {/* Use the Logo Component here */}
+          <Logo className="w-8 h-8 text-indigo-600" textClassName="text-2xl" />
         </Link>
 
         {/* Navigation */}

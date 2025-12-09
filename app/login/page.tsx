@@ -1,7 +1,9 @@
+// app/login/page.tsx
 import React from 'react';
 import LoginForm from '@/components/auth/login-form';
 import Link from 'next/link';
 import { Metadata } from 'next';
+import { Logo } from '@/components/ui/Logo'; // <--- Import Logo
 
 export const metadata: Metadata = {
   title: 'Login | Savvify',
@@ -14,10 +16,9 @@ export default function LoginPage() {
       {/* Left: Brand Panel */}
       <div className="hidden lg:flex w-1/2 bg-slate-900 relative overflow-hidden items-center justify-center text-white p-12">
         <div className="relative z-10 max-w-lg">
-          <div className="mb-8 text-blue-400">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-16 h-16">
-              <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clipRule="evenodd" />
-            </svg>
+          <div className="mb-8">
+            {/* Updated Large Logo for dark background */}
+            <Logo className="w-16 h-16 text-blue-400" textClassName="hidden" />
           </div>
           <h1 className="text-4xl font-bold tracking-tight mb-6">
             Financial clarity, simplified.
@@ -33,9 +34,8 @@ export default function LoginPage() {
         <div className="mx-auto w-full max-w-sm lg:w-96">
           <div className="text-center lg:text-left mb-8">
             <Link href="/" className="inline-block">
-              <span className="text-3xl font-bold text-slate-900 tracking-tight">
-                Savvify
-              </span>
+              {/* Updated Logo for form header */}
+              <Logo className="w-10 h-10 text-indigo-600" textClassName="text-3xl" />
             </Link>
             <h2 className="mt-6 text-2xl font-bold leading-9 tracking-tight text-slate-900">
               Sign in to your account
@@ -43,10 +43,8 @@ export default function LoginPage() {
           </div>
 
           <div className="mt-6">
-            {/* Login Form Component handles both Email and Telegram toggling */}
             <LoginForm />
           </div>
-
           <div className="mt-10 text-center text-xs text-gray-500">
             <p>&copy; {new Date().getFullYear()} Savvify. All rights reserved.</p>
           </div>

@@ -1,70 +1,134 @@
 import React from 'react';
 import { Metadata } from 'next';
+import Link from 'next/link';
+import { Shield, Lock, Eye, FileText, Globe, Server } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy | Savvify',
+  description: 'How Savvify collects, uses, and protects your data.',
 };
 
 export default function PrivacyPage() {
   return (
-    <article className="prose prose-slate prose-lg max-w-none prose-headings:font-bold prose-headings:text-slate-900 prose-p:text-slate-600 prose-a:text-indigo-600 hover:prose-a:text-indigo-500">
-      <div className="mb-10 border-b border-slate-100 pb-10">
-        <span className="inline-block rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-600 mb-4">
-          Last Updated: December 2025
-        </span>
-        <h1 className="mb-4 text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
+    <div className="max-w-4xl mx-auto">
+      {/* Header */}
+      <div className="mb-12 border-b border-slate-200 pb-8">
+        <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl mb-4">
           Privacy Policy
         </h1>
-        <p className="text-xl text-slate-500 leading-relaxed">
-          We believe you should own your financial data. Here is exactly how we handle your information.
+        <p className="text-lg text-slate-600">
+          Last Updated: December 2025
+        </p>
+        <p className="mt-4 text-sm text-slate-500">
+          Savvify is an independently developed service. This policy outlines how your data is handled with transparency and security as the primary goals.
         </p>
       </div>
 
-      <h3>1. Information We Collect</h3>
-      <p>We collect only the information necessary to provide our services:</p>
-      <ul>
-        <li><strong>Identity Data:</strong> Telegram User ID, display name, and (if provided) email address.</li>
-        <li><strong>Financial Data:</strong> Transaction details (amounts, currencies, categories, descriptions) and debt records (IOUs) you explicitly log into the system.</li>
-        <li><strong>Usage Data:</strong> Logs of how you interact with our bot and dashboard to help us improve stability and security.</li>
-      </ul>
+      {/* Content */}
+      <div className="space-y-12">
 
-      <h3>2. How We Use Your Information</h3>
-      <p>We process your data to:</p>
-      <ul>
-        <li>Provide the Savvify budgeting service and visualize your financial status.</li>
-        <li>Sync your data between the Telegram Bot and Web Dashboard.</li>
-        <li>Send you requested alerts (e.g., daily reminders).</li>
-        <li>Detect and prevent fraud or abuse of our systems.</li>
-      </ul>
+        {/* Section 1 */}
+        <section className="flex gap-4 sm:gap-8">
+          <div className="hidden sm:block mt-1">
+            <div className="h-10 w-10 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600">
+              <FileText className="h-5 w-5" />
+            </div>
+          </div>
+          <div className="prose prose-slate max-w-none">
+            <h3 className="text-xl font-bold text-slate-900">1. Information Collection</h3>
+            <p>
+              To function effectively as a finance tracker, Savvify collects specific data points.
+              Data collection is limited strictly to what is required for the Service to operate:
+            </p>
+            <ul className="list-disc pl-5 space-y-2 text-slate-600">
+              <li><strong>Identity Data:</strong> Telegram User ID, display name, and (if provided via the web dashboard) email address for authentication.</li>
+              <li><strong>Financial Data:</strong> Transaction records, amounts, categories, currencies, and debt records (IOUs) explicitly entered by the user.</li>
+              <li><strong>Usage Logs:</strong> Technical logs regarding bot interaction to assist with debugging and stability.</li>
+            </ul>
+          </div>
+        </section>
 
-      <h3>3. The Zero-Access Guarantee</h3>
-      <p>
-        We have a strict internal policy regarding your Financial Data. Our employees do not access your specific transaction or debt logs unless:
-      </p>
-      <ul>
-        <li>You explicitly grant us permission to resolve a specific support ticket.</li>
-        <li>We are compelled by a valid legal order.</li>
-      </ul>
-      <p>We do not sell, rent, or trade your personal data to third parties for marketing purposes.</p>
+        {/* Section 2 */}
+        <section className="flex gap-4 sm:gap-8">
+          <div className="hidden sm:block mt-1">
+            <div className="h-10 w-10 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600">
+              <Eye className="h-5 w-5" />
+            </div>
+          </div>
+          <div className="prose prose-slate max-w-none">
+            <h3 className="text-xl font-bold text-slate-900">2. Usage of Information</h3>
+            <p>
+              Data is processed solely for the purpose of providing personal financial analytics.
+              <strong>Savvify does not sell, rent, or trade user data to third parties.</strong>
+            </p>
+            <p>
+              Information is used to:
+            </p>
+            <ul className="list-disc pl-5 space-y-2 text-slate-600">
+              <li>Sync financial records between the Telegram interface and Web Dashboard.</li>
+              <li>Generate spending reports and financial summaries requested by the user.</li>
+              <li>Authenticate access to the account.</li>
+            </ul>
+          </div>
+        </section>
 
-      <h3>4. Data Storage & Security</h3>
-      <p>
-        Your data is stored in secure databases protected by industry-standard encryption. Data in transit is encrypted via TLS. While we strive to protect your data, no digital storage is impenetrable, and we encourage you to use strong passwords where applicable.
-      </p>
+        {/* Section 3 */}
+        <section className="flex gap-4 sm:gap-8">
+          <div className="hidden sm:block mt-1">
+            <div className="h-10 w-10 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
+              <Server className="h-5 w-5" />
+            </div>
+          </div>
+          <div className="prose prose-slate max-w-none">
+            <h3 className="text-xl font-bold text-slate-900">3. Data Storage & Jurisdiction</h3>
+            <p>
+              Data is stored on secure, encrypted database clusters. While the Service is operated from the <strong>Kingdom of Cambodia</strong>,
+              digital infrastructure may utilize international servers (e.g., AWS, MongoDB Atlas) to ensure uptime and speed.
+            </p>
+            <p>
+              By using the Service, users consent to the transfer and storage of their data on these secure international servers.
+            </p>
+          </div>
+        </section>
 
-      <h3>5. Your Rights</h3>
-      <p>Under applicable laws, you have the right to:</p>
-      <ul>
-        <li><strong>Access:</strong> Request a copy of all data we hold about you.</li>
-        <li><strong>Rectification:</strong> Correct inaccurate data directly via the dashboard.</li>
-        <li><strong>Erasure:</strong> Request deletion of your account and all associated data.</li>
-        <li><strong>Portability:</strong> Export your transaction history via the Settings page.</li>
-      </ul>
+        {/* Section 4 */}
+        <section className="flex gap-4 sm:gap-8">
+          <div className="hidden sm:block mt-1">
+            <div className="h-10 w-10 rounded-lg bg-purple-50 flex items-center justify-center text-purple-600">
+              <Lock className="h-5 w-5" />
+            </div>
+          </div>
+          <div className="prose prose-slate max-w-none">
+            <h3 className="text-xl font-bold text-slate-900">4. User Rights & Control</h3>
+            <p>
+              In alignment with international standards (such as GDPR principles) and Cambodian consumer protection laws, users retain full ownership of their financial logs.
+            </p>
+            <ul className="list-disc pl-5 space-y-2 text-slate-600">
+              <li><strong>Right to Access:</strong> You may view all your logged data via the dashboard at any time.</li>
+              <li><strong>Right to Erasure:</strong> You may request the complete deletion of your account and all associated records.</li>
+              <li><strong>Right to Export:</strong> You may export your transaction history via the CSV export tools provided.</li>
+            </ul>
+          </div>
+        </section>
 
-      <h3>6. Contact Us</h3>
-      <p>
-        If you have questions about your privacy, please contact our Data Protection Officer at <a href="mailto:privacy@savvify.com">privacy@savvify.com</a>.
-      </p>
-    </article>
+        {/* Contact */}
+        <div className="mt-16 rounded-2xl bg-slate-50 p-8 border border-slate-100">
+          <h3 className="text-lg font-semibold text-slate-900 mb-2">Data Protection Inquiries</h3>
+          <p className="text-slate-600 mb-4">
+            For any concerns regarding your data privacy or to exercise your rights, please contact the developer directly.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 sm:items-center">
+            <a href="mailto:helmthehelm@outlook.com" className="text-indigo-600 font-medium hover:underline">
+              helmthehelm@outlook.com
+            </a>
+            <span className="hidden sm:inline text-slate-300">|</span>
+            <a href="https://pr0meth4us.github.io/" target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-slate-800 transition-colors">
+              Developer Profile &rarr;
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
   );
 }

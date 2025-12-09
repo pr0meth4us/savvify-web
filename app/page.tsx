@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { PublicHeader } from "@/components/ui/PublicHeader";
+import { PublicFooter } from "@/components/ui/PublicFooter";
 import { Button } from "@/components/ui/Button";
 import {
   ArrowRight,
@@ -12,6 +14,8 @@ import {
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-white">
+      {/* 1. Add the Header here */}
+      <PublicHeader />
 
       {/* --- HERO SECTION --- */}
       <section className="relative pt-24 pb-32 overflow-hidden">
@@ -39,10 +43,10 @@ export default function Home() {
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
-            <Button size="lg" className="rounded-full px-8 h-14 text-lg shadow-xl shadow-indigo-500/20 bg-indigo-600 hover:bg-indigo-700 text-white border-0">
+            <Button size="lg" className="rounded-full px-8 h-14 text-lg shadow-xl shadow-indigo-500/20 bg-indigo-600 hover:bg-indigo-700 text-white border-0" asChild>
               <Link href="/signup">Start Free Trial</Link>
             </Button>
-            <Button size="lg" variant="outline" className="rounded-full px-8 h-14 text-lg border-zinc-200 text-zinc-700 hover:bg-zinc-50">
+            <Button size="lg" variant="outline" className="rounded-full px-8 h-14 text-lg border-zinc-200 text-zinc-700 hover:bg-zinc-50" asChild>
               <Link href="/pricing">View Pricing</Link>
             </Button>
           </div>
@@ -168,12 +172,15 @@ export default function Home() {
           <p className="text-zinc-500 mb-10 max-w-xl mx-auto">
             Join the smart spenders who have ditched their spreadsheets. Try it free for 30 days.
           </p>
-          <Button size="lg" className="rounded-full px-10 h-14 text-lg bg-zinc-900 text-white hover:bg-zinc-800">
+          <Button size="lg" className="rounded-full px-10 h-14 text-lg bg-zinc-900 text-white hover:bg-zinc-800" asChild>
             <Link href="/signup">Start Free Trial</Link>
           </Button>
           <p className="mt-4 text-xs text-zinc-400">No credit card required for setup.</p>
         </div>
       </section>
+
+      {/* 2. Add the Footer here */}
+      <PublicFooter />
     </div>
   );
 }

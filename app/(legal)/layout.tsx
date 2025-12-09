@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { PublicFooter } from '@/components/ui/PublicFooter';
-import { Logo } from '@/components/ui/Logo'; // Assuming you have this from the previous file
+import { Logo } from '@/components/ui/Logo';
 
 export default function LegalLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -9,24 +9,24 @@ export default function LegalLayout({ children }: { children: React.ReactNode })
       {/* Navigation */}
       <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/80 backdrop-blur-md">
         <div className="container mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
-          <Link href="/" className="flex items-center gap-2">
-            <Logo className="w-6 h-6" textClassName="text-lg" />
-            <span className="text-sm font-medium text-slate-400">/</span>
-            <span className="text-sm font-semibold text-slate-600">Legal</span>
+          <Link href="/" className="flex items-center gap-2 group">
+            <Logo className="w-6 h-6 text-indigo-600" textClassName="text-lg group-hover:text-indigo-600 transition-colors" />
+            <span className="text-slate-300">/</span>
+            <span className="text-sm font-semibold text-slate-600">Trust Center</span>
           </Link>
           <Link
             href="/"
-            className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors"
+            className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors"
           >
-            Exit
+            Back to Home
           </Link>
         </div>
       </header>
 
-      {/* Content Content */}
+      {/* Content Container */}
       <main className="flex-grow py-12 sm:py-20">
-        <div className="container mx-auto max-w-3xl px-6">
-          <div className="bg-white p-8 sm:p-16 rounded-2xl shadow-sm border border-slate-200">
+        <div className="container mx-auto max-w-5xl px-4 sm:px-6">
+          <div className="bg-white p-8 sm:p-16 rounded-3xl shadow-sm border border-slate-200/60">
             {children}
           </div>
         </div>
