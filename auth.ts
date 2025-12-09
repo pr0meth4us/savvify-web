@@ -1,4 +1,4 @@
-import NextAuth from "next-auth";
+import NextAuth, { AuthError } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { authConfig } from "./auth.config";
 import axios from "axios";
@@ -10,7 +10,15 @@ interface BifrostLoginResponse {
   account_id?: string;
   display_name?: string;
   email?: string;
-  role?: string; // 'user', 'premium_user', 'admin'
+  role?: string;
+  // 'user', 'premium_user', 'admin'
+}
+
+class CustomAuthError extends AuthError {
+  constructor(message: string) {
+    super(message);
+    this.type = "CredentialsSignin";
+  }
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
@@ -20,8 +28,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       id: "bifrost-credentials",
       name: "Savvify Login",
       credentials: {
-        // We define all possible credential inputs here.
-        // Depending on the UI flow, only some will be populated.
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
         otpCode: { label: "OTP Code", type: "text" },
@@ -34,8 +40,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const clientId = process.env.NEXT_PUBLIC_BIFROST_CLIENT_ID;
 
           if (!bifrostUrl || !clientId) {
-            console.error("Missing BIFROST_URL or NEXT_PUBLIC_BIFROST_CLIENT_ID");
-            return null;
+            throw new CustomAuthError("Configuration Error: Missing Auth Server URL");
           }
 
           let response;
@@ -50,8 +55,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               },
               {
                 headers: { "Content-Type": "application/json" },
-                // Allow 401/403 to be handled gracefully below
-                validateStatus: (status) => status === 200 || status === 401 || status === 403,
+                validateStatus: (status) => status === 200 || status === 401 || status === 403 || status === 400,
               }
             );
           }
@@ -66,11 +70,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               },
               {
                 headers: { "Content-Type": "application/json" },
-                validateStatus: (status) => status === 200 || status === 401 || status === 403,
+                validateStatus: (status) => status === 200 || status === 401 || status === 403 || status === 400,
               }
             );
           }
-          // --- SCENARIO 3: Telegram Widget / Mini App (Legacy/Webapp) ---
+          // --- SCENARIO 3: Telegram Widget / Mini App ---
           else if (credentials?.telegramUser) {
             const tgUser = JSON.parse(credentials.telegramUser as string);
             response = await axios.post<BifrostLoginResponse>(
@@ -91,32 +95,29 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               }
             );
           } else {
-            // No valid credentials provided
             return null;
           }
 
           // --- Response Handling ---
-
-          // 1. Check for API-level errors
           if (response.status !== 200 || !response.data.jwt) {
-            console.error("Bifrost Auth Failed:", response.data);
-            return null; // Triggers "Invalid credentials" error in NextAuth
+            const errorMsg = response.data.error || "Authentication failed";
+            throw new CustomAuthError(errorMsg);
           }
 
           const data = response.data;
 
-          // 2. Map Backend User to NextAuth User
-          // We map the JWT to 'accessToken' so it can be passed to the session
           return {
             id: data.account_id || "unknown-id",
             name: data.display_name || (credentials?.email as string) || "Savvify User",
             email: data.email || (credentials?.email as string) || "",
             role: data.role || "user",
-            accessToken: data.jwt, // Crucial: This is the token used for API calls
-            telegramId: "", // Optional, usually inside the JWT claim
+            accessToken: data.jwt,
+            telegramId: "",
           };
-
-        } catch (error) {
+        } catch (error: any) {
+          if (error instanceof CustomAuthError) {
+            throw error;
+          }
           console.error("NextAuth Authorize Error:", error);
           return null;
         }
@@ -124,8 +125,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    // 1. JWT Callback: Called whenever a token is created or updated.
-    // We persist the data returned from `authorize` into the token.
     async jwt({ token, user }) {
       if (user) {
         token.accessToken = user.accessToken;
@@ -135,8 +134,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return token;
     },
-    // 2. Session Callback: Called whenever `useSession` or `auth()` is checked.
-    // We pass data from the token to the session object available in React components.
     async session({ session, token }) {
       if (token && session.user) {
         session.accessToken = token.accessToken as string;
@@ -149,7 +146,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days (Adjust based on Bifrost JWT expiry)
+    maxAge: 30 * 24 * 60 * 60,
   },
-  secret: process.env.NEXTAUTH_SECRET, // Ensure this ENV var is set
+  secret: process.env.NEXTAUTH_SECRET,
 });

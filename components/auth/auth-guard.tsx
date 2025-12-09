@@ -13,10 +13,10 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
-    // 1. If session is loading, do nothing yet
+    // 1. Loading state: wait
     if (status === "loading") return;
 
-    // 2. If unauthenticated, stop loading (Layout will handle protection/redirects)
+    // 2. Unauthenticated: let the layout/middleware handle redirects
     if (status === "unauthenticated") {
       setIsChecking(false);
       return;
@@ -24,51 +24,48 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
     const validateSession = async () => {
       try {
-        // CHANGED: Use /users/me because /auth/me is returning 404 in your logs
-        // /users/me returns { profile: ..., role: ... }
+        // Fetch current profile from backend
         const { data } = await api.get("/users/me");
 
-        // --- ROLE SYNC LOGIC ---
-        // Only update if there is a mismatch AND we haven't just updated (to prevent loops)
+        // --- ROLE SYNC ---
+        // Only update if role differs to avoid loops
         if (session?.user?.role !== data.role) {
           console.log(`[AuthGuard] Syncing Role: ${session?.user?.role} -> ${data.role}`);
-
           await update({
             ...session,
             user: { ...session?.user, role: data.role }
           });
-
-          // Force a router refresh to apply server-side permission checks
-          router.refresh();
-          return; // Stop here, let the effect re-run with new session
+          // Do NOT return here; continue to onboarding check
         }
 
         // --- ONBOARDING CHECK ---
-        // Check if email is missing (for Telegram users)
-        const isMissingEmail = !data.profile?.email && !data.email;
+        // Check if user needs to link an email (common for Telegram-first users)
+        const hasEmail = data.email || (data.profile && data.profile.email);
         const isOnCompleteProfile = pathname === "/complete-profile";
 
-        if (isMissingEmail && !isOnCompleteProfile) {
+        if (!hasEmail && !isOnCompleteProfile) {
           router.replace("/complete-profile");
           return;
         }
 
-        if (!isMissingEmail && isOnCompleteProfile) {
+        if (hasEmail && isOnCompleteProfile) {
           router.replace("/dashboard");
           return;
         }
 
       } catch (error) {
-        // If 401/403, the token is invalid.
-        // api.ts interceptor usually handles this, but we catch it here to stop the spinner.
         console.error("[AuthGuard] Validation failed:", error);
+        // Api interceptor handles 401, but just in case:
+        if (typeof window !== "undefined" && (error as any)?.response?.status === 401) {
+          // Let the interceptor redirect
+        }
       } finally {
         setIsChecking(false);
       }
     };
 
     validateSession();
-  }, [status, pathname, update, session, router]);
+  }, [status, pathname, router, session?.user?.role, update]);
 
   if (status === "loading" || isChecking) {
     return (
