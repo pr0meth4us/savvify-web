@@ -13,62 +13,68 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
-    const checkProfile = async () => {
-      // 1. Wait for session to load
-      if (status === "loading") return;
+    // 1. If session is loading, do nothing yet
+    if (status === "loading") return;
 
-      // 2. If unauthenticated, stop checking (middleware or layout usually handles redirect,
-      // but we set checking false to render nothing/children based on logic)
-      if (status === "unauthenticated") {
-        setIsChecking(false);
-        return;
-      }
-
-      // 3. If authenticated, validate backend profile state
-      if (status === "authenticated") {
-        try {
-          const { data } = await api.get("/auth/me");
-
-          // Sync Role Mismatch: If backend role changed (e.g. upgraded to premium), update session
-          if (session?.user?.role !== data.role) {
-            await update({
-              ...session,
-              user: { ...session?.user, role: data.role }
-            });
-            // Force a reload to ensure new role permissions apply
-            router.refresh();
-          }
-
-          // Onboarding Check
-          const isMissingEmail = !data.email;
-          const isOnCompleteProfile = pathname === "/complete-profile";
-
-          if (isMissingEmail && !isOnCompleteProfile) {
-            router.push("/complete-profile");
-            return;
-          }
-
-          if (!isMissingEmail && isOnCompleteProfile) {
-            router.push("/dashboard");
-            return;
-          }
-
-        } catch (error) {
-          console.error("Profile check failed", error);
-        }
-      }
-
+    // 2. If unauthenticated, stop loading (Layout will handle protection/redirects)
+    if (status === "unauthenticated") {
       setIsChecking(false);
+      return;
+    }
+
+    const validateSession = async () => {
+      try {
+        // CHANGED: Use /users/me because /auth/me is returning 404 in your logs
+        // /users/me returns { profile: ..., role: ... }
+        const { data } = await api.get("/users/me");
+
+        // --- ROLE SYNC LOGIC ---
+        // Only update if there is a mismatch AND we haven't just updated (to prevent loops)
+        if (session?.user?.role !== data.role) {
+          console.log(`[AuthGuard] Syncing Role: ${session?.user?.role} -> ${data.role}`);
+
+          await update({
+            ...session,
+            user: { ...session?.user, role: data.role }
+          });
+
+          // Force a router refresh to apply server-side permission checks
+          router.refresh();
+          return; // Stop here, let the effect re-run with new session
+        }
+
+        // --- ONBOARDING CHECK ---
+        // Check if email is missing (for Telegram users)
+        const isMissingEmail = !data.profile?.email && !data.email;
+        const isOnCompleteProfile = pathname === "/complete-profile";
+
+        if (isMissingEmail && !isOnCompleteProfile) {
+          router.replace("/complete-profile");
+          return;
+        }
+
+        if (!isMissingEmail && isOnCompleteProfile) {
+          router.replace("/dashboard");
+          return;
+        }
+
+      } catch (error) {
+        // If 401/403, the token is invalid.
+        // api.ts interceptor usually handles this, but we catch it here to stop the spinner.
+        console.error("[AuthGuard] Validation failed:", error);
+      } finally {
+        setIsChecking(false);
+      }
     };
 
-    checkProfile();
-  }, [status, router, pathname, update, session]);
+    validateSession();
+  }, [status, pathname, update, session, router]);
 
   if (status === "loading" || isChecking) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50">
         <Spinner size="lg" />
-        <p className="mt-4 text-slate-500 font-medium">Loading...</p>
+        <p className="mt-4 text-slate-500 font-medium">Verifying Session...</p>
       </div>
     );
   }

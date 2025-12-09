@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="96c15fb9-048b-4717-8d22-6ea6afd2a399" name="Changes" comment="better cookie maangement" />
+    <list default="true" id="96c15fb9-048b-4717-8d22-6ea6afd2a399" name="Changes" comment="trigger">
+      <change beforePath="$PROJECT_DIR$/components/auth/auth-guard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/auth/auth-guard.tsx" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -135,7 +137,7 @@
       <workItem from="1765175056474" duration="1339000" />
       <workItem from="1765179284484" duration="3179000" />
       <workItem from="1765244786959" duration="3430000" />
-      <workItem from="1765268051703" duration="3388000" />
+      <workItem from="1765268051703" duration="3774000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <option name="closed" value="true" />
@@ -249,7 +251,15 @@
       <option name="project" value="LOCAL" />
       <updated>1765272233941</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="trigger">
+      <option name="closed" value="true" />
+      <created>1765272692446</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1765272692446</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -273,7 +283,8 @@
     <MESSAGE value="new looks" />
     <MESSAGE value="users/me" />
     <MESSAGE value="better cookie maangement" />
-    <option name="LAST_COMMIT_MESSAGE" value="better cookie maangement" />
+    <MESSAGE value="trigger" />
+    <option name="LAST_COMMIT_MESSAGE" value="trigger" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
