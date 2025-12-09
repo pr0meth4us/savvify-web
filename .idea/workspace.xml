@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="96c15fb9-048b-4717-8d22-6ea6afd2a399" name="Changes" comment="users/me">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="96c15fb9-048b-4717-8d22-6ea6afd2a399" name="Changes" comment="better cookie maangement">
+      <change afterPath="$PROJECT_DIR$/app/(public)/trust/page.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -125,7 +125,7 @@
       <workItem from="1765175056474" duration="1339000" />
       <workItem from="1765179284484" duration="3179000" />
       <workItem from="1765244786959" duration="3430000" />
-      <workItem from="1765268051703" duration="2445000" />
+      <workItem from="1765268051703" duration="2795000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <option name="closed" value="true" />
@@ -215,7 +215,15 @@
       <option name="project" value="LOCAL" />
       <updated>1765271346671</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="better cookie maangement">
+      <option name="closed" value="true" />
+      <created>1765271788997</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1765271788998</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -238,14 +246,15 @@
     <MESSAGE value="version" />
     <MESSAGE value="new looks" />
     <MESSAGE value="users/me" />
-    <option name="LAST_COMMIT_MESSAGE" value="users/me" />
+    <MESSAGE value="better cookie maangement" />
+    <option name="LAST_COMMIT_MESSAGE" value="better cookie maangement" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/auth.ts</url>
-          <line>15</line>
+          <line>13</line>
           <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="1" />
         </line-breakpoint>
