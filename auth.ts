@@ -35,7 +35,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       authorize: async (credentials) => {
         try {
-          // Ensure URL does not have a trailing slash
           const bifrostUrl = process.env.BIFROST_URL?.replace(/\/$/, "");
           const clientId = process.env.NEXT_PUBLIC_BIFROST_CLIENT_ID;
 
@@ -45,37 +44,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
           let response;
 
-          // --- SCENARIO 1: Telegram OTP Login (from /login command) ---
+          // --- SCENARIO 1: Telegram OTP ---
           if (credentials?.otpCode) {
             response = await axios.post<BifrostLoginResponse>(
               `${bifrostUrl}/auth/api/verify-otp`,
-              {
-                client_id: clientId,
-                code: credentials.otpCode,
-              },
-              {
-                headers: { "Content-Type": "application/json" },
-                // Allow specific statuses to handle them manually
-                validateStatus: (status) => status === 200 || status === 401 || status === 403 || status === 400,
-              }
+              { client_id: clientId, code: credentials.otpCode },
+              { headers: { "Content-Type": "application/json" }, validateStatus: (s) => s < 500 }
             );
           }
-          // --- SCENARIO 2: Email & Password Login ---
+          // --- SCENARIO 2: Email/Password ---
           else if (credentials?.email && credentials?.password) {
             response = await axios.post<BifrostLoginResponse>(
               `${bifrostUrl}/auth/api/login`,
-              {
-                client_id: clientId,
-                email: credentials.email,
-                password: credentials.password,
-              },
-              {
-                headers: { "Content-Type": "application/json" },
-                validateStatus: (status) => status === 200 || status === 401 || status === 403 || status === 400,
-              }
+              { client_id: clientId, email: credentials.email, password: credentials.password },
+              { headers: { "Content-Type": "application/json" }, validateStatus: (s) => s < 500 }
             );
           }
-          // --- SCENARIO 3: Telegram Widget / Mini App ---
+          // --- SCENARIO 3: Telegram Widget ---
           else if (credentials?.telegramUser) {
             const tgUser = JSON.parse(credentials.telegramUser as string);
             response = await axios.post<BifrostLoginResponse>(
@@ -90,35 +75,28 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                 hash: tgUser.hash,
                 auth_date: tgUser.auth_date,
               },
-              {
-                headers: { "Content-Type": "application/json" },
-                validateStatus: (status) => status === 200 || status === 401 || status === 403,
-              }
+              { headers: { "Content-Type": "application/json" }, validateStatus: (s) => s < 500 }
             );
           } else {
             return null;
           }
 
-          // --- Response Handling ---
           if (response.status !== 200 || !response.data.jwt) {
-            const errorMsg = response.data.error || "Authentication failed";
-            throw new CustomAuthError(errorMsg);
+            throw new CustomAuthError(response.data.error || "Authentication failed");
           }
 
           const data = response.data;
 
           return {
             id: data.account_id || "unknown-id",
-            name: data.display_name || (credentials?.email as string) || "Savvify User",
+            name: data.display_name || (credentials?.email as string) || "User",
             email: data.email || (credentials?.email as string) || "",
             role: data.role || "user",
             accessToken: data.jwt,
             telegramId: "",
           };
         } catch (error: any) {
-          if (error instanceof CustomAuthError) {
-            throw error;
-          }
+          if (error instanceof CustomAuthError) throw error;
           console.error("NextAuth Authorize Error:", error);
           return null;
         }
@@ -126,7 +104,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
-    // 1. JWT Callback: FIX - Handle 'update' trigger
+    // 1. JWT Callback: Handles Token Updates
     async jwt({ token, user, trigger, session }) {
       // Initial sign in
       if (user) {
@@ -136,15 +114,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.telegramId = user.telegramId;
       }
 
-      // Handle session updates (e.g. role sync from AuthGuard)
+      // Handle session updates (e.g. triggered by AuthGuard)
       if (trigger === "update" && session) {
-        if (session.user?.role) token.role = session.user.role;
-        // Add other fields you might want to update here
+        // Support both { role: '...' } and { user: { role: '...' } } structures
+        if (session.role) {
+          token.role = session.role;
+        } else if (session.user?.role) {
+          token.role = session.user.role;
+        }
       }
-
       return token;
     },
-    // 2. Session Callback
+    // 2. Session Callback: Exposes Token Data to Client
     async session({ session, token }) {
       if (token && session.user) {
         session.accessToken = token.accessToken as string;
@@ -155,9 +136,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return session;
     },
   },
-  session: {
-    strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-  },
+  session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 },
   secret: process.env.NEXTAUTH_SECRET,
 });

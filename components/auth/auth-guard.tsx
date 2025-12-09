@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Spinner } from "@/components/ui/Spinner";
@@ -12,36 +12,44 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isChecking, setIsChecking] = useState(true);
 
+  // Use a ref to prevent overlapping updates causing loops
+  const isUpdating = useRef(false);
+
   useEffect(() => {
-    // 1. Loading state: wait
     if (status === "loading") return;
 
-    // 2. Unauthenticated: let the layout/middleware handle redirects
     if (status === "unauthenticated") {
       setIsChecking(false);
       return;
     }
 
     const validateSession = async () => {
+      // Prevent running validation if we are already in the middle of an update
+      if (isUpdating.current) return;
+
       try {
-        // Fetch current profile from backend
-        // Note: The backend MUST return the 'email' field for this check to work
+        // Fetch fresh profile from backend
         const { data } = await api.get("/users/me");
 
         // --- ROLE SYNC ---
-        // Only update if role differs to avoid loops
-        if (session?.user?.role !== data.role) {
+        // Ensure data.role exists before comparing
+        if (data.role && session?.user?.role !== data.role) {
           console.log(`[AuthGuard] Syncing Role: ${session?.user?.role} -> ${data.role}`);
-          await update({
-            ...session,
-            user: { ...session?.user, role: data.role }
-          });
-          // Do NOT return here; continue to onboarding check
+
+          isUpdating.current = true; // Lock
+
+          // Send a simplified payload. 'auth.ts' is now patched to handle { role: ... }
+          await update({ role: data.role });
+
+          // Force a router refresh to update server components with the new cookie
+          router.refresh();
+
+          isUpdating.current = false; // Unlock
+          // We return here because the session update will trigger this effect again with new values
+          return;
         }
 
         // --- ONBOARDING CHECK ---
-        // Check if user needs to link an email (common for Telegram-first users)
-        // We look at the top-level email or the profile email
         const hasEmail = data.email || (data.profile && data.profile.email);
         const isOnCompleteProfile = pathname === "/complete-profile";
 
@@ -57,7 +65,8 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
       } catch (error) {
         console.error("[AuthGuard] Validation failed:", error);
-        // If 401, the interceptor will handle it.
+        // If 401, the interceptor handles it.
+        isUpdating.current = false;
       } finally {
         setIsChecking(false);
       }
