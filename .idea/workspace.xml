@@ -4,12 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="96c15fb9-048b-4717-8d22-6ea6afd2a399" name="Changes" comment="new looks">
-      <change afterPath="$PROJECT_DIR$/components/auth/premium-guard.tsx" afterDir="false" />
+    <list default="true" id="96c15fb9-048b-4717-8d22-6ea6afd2a399" name="Changes" comment="users/me">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(app)/analytics/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(app)/analytics/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(app)/settings/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(app)/settings/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth.ts" beforeDir="false" afterPath="$PROJECT_DIR$/auth.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,7 +125,7 @@
       <workItem from="1765175056474" duration="1339000" />
       <workItem from="1765179284484" duration="3179000" />
       <workItem from="1765244786959" duration="3430000" />
-      <workItem from="1765268051703" duration="1831000" />
+      <workItem from="1765268051703" duration="2445000" />
     </task>
     <task id="LOCAL-00001" summary="initial commit">
       <option name="closed" value="true" />
@@ -203,7 +199,23 @@
       <option name="project" value="LOCAL" />
       <updated>1765268082422</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="new looks">
+      <option name="closed" value="true" />
+      <created>1765271097351</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1765271097351</updated>
+    </task>
+    <task id="LOCAL-00011" summary="users/me">
+      <option name="closed" value="true" />
+      <created>1765271346671</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1765271346671</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -225,7 +237,8 @@
     <MESSAGE value="email link" />
     <MESSAGE value="version" />
     <MESSAGE value="new looks" />
-    <option name="LAST_COMMIT_MESSAGE" value="new looks" />
+    <MESSAGE value="users/me" />
+    <option name="LAST_COMMIT_MESSAGE" value="users/me" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

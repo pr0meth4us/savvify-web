@@ -3,27 +3,25 @@ import Credentials from "next-auth/providers/credentials";
 import { authConfig } from "./auth.config";
 import axios from "axios";
 
+// Define the shape of the response expected from the Bifrost Auth Service
 interface BifrostLoginResponse {
   jwt: string;
   error?: string;
   account_id?: string;
   display_name?: string;
-}
-
-interface BifrostValidationResponse {
-  is_valid: boolean;
-  app_specific_role: string; // This holds "premium_user" or "user"
-  account_id: string;
+  email?: string;
+  role?: string; // 'user', 'premium_user', 'admin'
 }
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   ...authConfig,
-  session: { strategy: "jwt" },
   providers: [
     Credentials({
       id: "bifrost-credentials",
-      name: "Helm Bifrost",
+      name: "Savvify Login",
       credentials: {
+        // We define all possible credential inputs here.
+        // Depending on the UI flow, only some will be populated.
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
         otpCode: { label: "OTP Code", type: "text" },
@@ -31,102 +29,127 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       authorize: async (credentials) => {
         try {
-          // 1. Setup Configuration
+          // Ensure URL does not have a trailing slash
           const bifrostUrl = process.env.BIFROST_URL?.replace(/\/$/, "");
           const clientId = process.env.NEXT_PUBLIC_BIFROST_CLIENT_ID;
-          const clientSecret = process.env.BIFROST_CLIENT_SECRET;
 
-          let loginResponse;
+          if (!bifrostUrl || !clientId) {
+            console.error("Missing BIFROST_URL or NEXT_PUBLIC_BIFROST_CLIENT_ID");
+            return null;
+          }
 
-          // 2. Initial Login Call (Get JWT)
+          let response;
+
+          // --- SCENARIO 1: Telegram OTP Login (from /login command) ---
           if (credentials?.otpCode) {
-            loginResponse = await axios.post<BifrostLoginResponse>(
+            response = await axios.post<BifrostLoginResponse>(
               `${bifrostUrl}/auth/api/verify-otp`,
-              { client_id: clientId, code: credentials.otpCode },
-              { validateStatus: () => true }
+              {
+                client_id: clientId,
+                code: credentials.otpCode,
+              },
+              {
+                headers: { "Content-Type": "application/json" },
+                // Allow 401/403 to be handled gracefully below
+                validateStatus: (status) => status === 200 || status === 401 || status === 403,
+              }
             );
-          } else if (credentials?.email && credentials?.password) {
-            loginResponse = await axios.post<BifrostLoginResponse>(
+          }
+          // --- SCENARIO 2: Email & Password Login ---
+          else if (credentials?.email && credentials?.password) {
+            response = await axios.post<BifrostLoginResponse>(
               `${bifrostUrl}/auth/api/login`,
-              { client_id: clientId, email: credentials.email, password: credentials.password },
-              { validateStatus: () => true }
+              {
+                client_id: clientId,
+                email: credentials.email,
+                password: credentials.password,
+              },
+              {
+                headers: { "Content-Type": "application/json" },
+                validateStatus: (status) => status === 200 || status === 401 || status === 403,
+              }
             );
-          } else if (credentials?.telegramUser) {
+          }
+          // --- SCENARIO 3: Telegram Widget / Mini App (Legacy/Webapp) ---
+          else if (credentials?.telegramUser) {
             const tgUser = JSON.parse(credentials.telegramUser as string);
-            loginResponse = await axios.post<BifrostLoginResponse>(
+            response = await axios.post<BifrostLoginResponse>(
               `${bifrostUrl}/auth/api/telegram-login`,
               {
                 client_id: clientId,
-                telegram_data: tgUser // Ensure utils/bifrost.py logic matches
+                telegram_id: tgUser.id,
+                username: tgUser.username,
+                first_name: tgUser.first_name,
+                last_name: tgUser.last_name,
+                photo_url: tgUser.photo_url,
+                hash: tgUser.hash,
+                auth_date: tgUser.auth_date,
               },
-              { validateStatus: () => true }
+              {
+                headers: { "Content-Type": "application/json" },
+                validateStatus: (status) => status === 200 || status === 401 || status === 403,
+              }
             );
           } else {
+            // No valid credentials provided
             return null;
           }
 
-          if (loginResponse.status !== 200 || !loginResponse.data.jwt) {
-            console.error("Login Failed:", loginResponse.data);
-            return null;
+          // --- Response Handling ---
+
+          // 1. Check for API-level errors
+          if (response.status !== 200 || !response.data.jwt) {
+            console.error("Bifrost Auth Failed:", response.data);
+            return null; // Triggers "Invalid credentials" error in NextAuth
           }
 
-          const jwt = loginResponse.data.jwt;
+          const data = response.data;
 
-          // 3. VALIDATE ROLE WITH BACKEND (The Fix)
-          // We call the internal validation endpoint to get the real DB role
-          let userRole = "user";
-
-          if (clientId && clientSecret) {
-            try {
-              const validationRes = await axios.post<BifrostValidationResponse>(
-                `${bifrostUrl}/internal/validate-token`,
-                { jwt },
-                {
-                  auth: { username: clientId, password: clientSecret },
-                  validateStatus: () => true
-                }
-              );
-
-              if (validationRes.status === 200 && validationRes.data.is_valid) {
-                userRole = validationRes.data.app_specific_role || "user";
-              }
-            } catch (valError) {
-              console.error("Role validation failed, defaulting to 'user'", valError);
-            }
-          }
-
-          // 4. Return User Object with Correct Role
+          // 2. Map Backend User to NextAuth User
+          // We map the JWT to 'accessToken' so it can be passed to the session
           return {
-            id: loginResponse.data.account_id || "unknown",
-            role: userRole,
-            accessToken: jwt,
-            name: loginResponse.data.display_name || "User",
-            email: (credentials?.email as string) || "",
+            id: data.account_id || "unknown-id",
+            name: data.display_name || (credentials?.email as string) || "Savvify User",
+            email: data.email || (credentials?.email as string) || "",
+            role: data.role || "user",
+            accessToken: data.jwt, // Crucial: This is the token used for API calls
+            telegramId: "", // Optional, usually inside the JWT claim
           };
 
         } catch (error) {
-          console.error("Auth Error:", error);
+          console.error("NextAuth Authorize Error:", error);
           return null;
         }
       },
     }),
   ],
   callbacks: {
+    // 1. JWT Callback: Called whenever a token is created or updated.
+    // We persist the data returned from `authorize` into the token.
     async jwt({ token, user }) {
       if (user) {
         token.accessToken = user.accessToken;
-        token.role = user.role; // Pass role to token
+        token.role = user.role;
         token.userId = user.id;
+        token.telegramId = user.telegramId;
       }
       return token;
     },
+    // 2. Session Callback: Called whenever `useSession` or `auth()` is checked.
+    // We pass data from the token to the session object available in React components.
     async session({ session, token }) {
-      if (token) {
+      if (token && session.user) {
         session.accessToken = token.accessToken as string;
         session.user.id = token.userId as string;
-        session.user.role = token.role as string; // Pass role to client session
+        session.user.role = token.role as string;
+        session.user.telegramId = token.telegramId as string;
       }
       return session;
     },
   },
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days (Adjust based on Bifrost JWT expiry)
+  },
+  secret: process.env.NEXTAUTH_SECRET, // Ensure this ENV var is set
 });
