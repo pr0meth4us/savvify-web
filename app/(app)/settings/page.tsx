@@ -6,24 +6,32 @@ import { UserProfile } from "@/types/api";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
-import { Trash2, Plus, Save, CreditCard, MessageCircle, Star, Download, AlertTriangle } from "lucide-react";
+import { Trash2, Plus, Save, CreditCard, MessageCircle, Star, Download, AlertTriangle, User, Mail, ShieldCheck } from "lucide-react";
 import { Spinner } from "@/components/ui/Spinner";
 
 export default function SettingsPage() {
-  const { data: session } = useSession();
+  const { data: session, update: updateSession } = useSession();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Profile Form State
+  const [displayName, setDisplayName] = useState("");
+  const [email, setEmail] = useState("");
+  const [originalEmail, setOriginalEmail] = useState(""); // Track initial to detect changes
+  const [otpCode, setOtpCode] = useState("");
+  const [proofToken, setProofToken] = useState("");
+  const [isVerifyingEmail, setIsVerifyingEmail] = useState(false); // UI State for OTP input
+  const [otpSent, setOtpSent] = useState(false);
+  const [emailVerified, setEmailVerified] = useState(false);
 
   // Local state for forms
   const [newCategory, setNewCategory] = useState("");
   const [balanceUSD, setBalanceUSD] = useState("");
   const [balanceKHR, setBalanceKHR] = useState("");
   const [rate, setRate] = useState("");
-
   // Mode & Currency state
   const [currencyMode, setCurrencyMode] = useState<'single' | 'dual'>('dual');
   const [primaryCurrency, setPrimaryCurrency] = useState("USD");
-
   const [paymentLoading, setPaymentLoading] = useState(false);
 
   const SUPPORTED_CURRENCIES = ["USD", "KHR", "EUR", "GBP", "SGD", "JPY", "CNY", "AUD", "CAD"];
@@ -35,9 +43,16 @@ export default function SettingsPage() {
 
   const fetchSettings = async () => {
     try {
-      const res = await api.get<{profile: UserProfile}>("/settings/");
+      const res = await api.get<{profile: UserProfile, email: string}>("/users/me");
       const p = res.data.profile;
+
+      // Merge email from root response (from auth token) into profile object for UI consistency
+      const userEmail = res.data.email || p.email || "";
+
       setProfile(p);
+      setDisplayName(p.name_en || "");
+      setEmail(userEmail);
+      setOriginalEmail(userEmail);
 
       if(p.settings) {
         setBalanceUSD(p.settings.initial_balances?.USD?.toString() || "0");
@@ -46,12 +61,8 @@ export default function SettingsPage() {
         setCurrencyMode(p.settings.currency_mode || 'dual');
         setPrimaryCurrency(p.settings.primary_currency || 'USD');
 
-        // If single mode, load that specific balance into the first input field for convenience
         if (p.settings.currency_mode === 'single') {
           const curr = p.settings.primary_currency || 'USD';
-          // We reuse setBalanceUSD state for the primary currency balance in UI
-          // This is a UI mapping, backend still uses dynamic keys
-          // But for simplicity, we map it to balanceUSD state var
           const val = p.settings.initial_balances?.[curr] || 0;
           setBalanceUSD(val.toString());
         }
@@ -67,6 +78,122 @@ export default function SettingsPage() {
     fetchSettings();
   }, []);
 
+  // --- PROFILE LOGIC ---
+
+  const handleRequestOtp = async () => {
+    try {
+      await api.post("/auth/request-email-otp", { email });
+      setOtpSent(true);
+      setIsVerifyingEmail(true);
+      alert(`Verification code sent to ${email}`);
+    } catch (e: any) {
+      alert(e.response?.data?.error || "Failed to send code");
+    }
+  };
+
+  const handleVerifyOtp = async () => {
+    try {
+      // Find verification ID logic is hidden in standard auth flow usually,
+      // but here we just send code and email to verify-otp endpoint?
+      // The proxy endpoint in auth/routes.py expects verification_id.
+      // NOTE: Our simple proxy setup in `web_service` calls Bifrost.
+      // Bifrost's `verify_otp` needs `verification_id` OR (`identifier` + `code`).
+      // Let's modify the frontend to call the proxy with email as identifier if ID missing?
+      // Actually, Bifrost model supports identifier lookup.
+      // But `auth_api.py` in Bifrost expects verification_id.
+      // Let's assume the request-otp returns verification_id.
+
+      // RE-RUN REQUEST to capture ID properly if needed, but for now let's assume
+      // the user initiates the flow.
+      // Actually, `request-email-otp` returns `verification_id`. We need to capture it.
+      // Let's fix handleRequestOtp above first.
+
+      // Wait, we can't easily capture it without modifying state.
+      // Let's adjust handleRequestOtp to store the ID.
+      const res = await api.post("/auth/request-email-otp", { email });
+      const verId = res.data.verification_id;
+      if(!verId) throw new Error("No ID returned");
+
+      // Now actually verify
+      const verifyRes = await api.post("/auth/verify-email-otp", {
+        verification_id: verId,
+        code: otpCode
+      });
+
+      if(verifyRes.data.proof_token) {
+        setProofToken(verifyRes.data.proof_token);
+        setEmailVerified(true);
+        setIsVerifyingEmail(false); // Close OTP box
+        alert("Email verified! You can now save changes.");
+      }
+    } catch (e: any) {
+      // Fallback: If the user already clicked "Send" previously and we lost state,
+      // we might fail. But in this single-page flow, variables hold.
+      // If request-otp was void, we call it again inside verify? No.
+      console.error(e);
+      alert("Verification failed. Please try sending the code again.");
+    }
+  };
+
+  // Revised Request OTP that stores the ID locally in the closure or state?
+  // Let's add a state for it.
+  const [verificationId, setVerificationId] = useState("");
+
+  const handleRequestOtpReal = async () => {
+    try {
+      const res = await api.post("/auth/request-email-otp", { email });
+      if(res.data.verification_id) {
+        setVerificationId(res.data.verification_id);
+        setOtpSent(true);
+        setIsVerifyingEmail(true);
+      }
+    } catch(e: any) {
+      alert(e.response?.data?.error || "Failed to send OTP");
+    }
+  };
+
+  const handleVerifyOtpReal = async () => {
+    if(!verificationId) return;
+    try {
+      const res = await api.post("/auth/verify-email-otp", {
+        verification_id: verificationId,
+        code: otpCode
+      });
+      if(res.data.proof_token) {
+        setProofToken(res.data.proof_token);
+        setEmailVerified(true);
+        setIsVerifyingEmail(false);
+      }
+    } catch(e: any) {
+      alert("Invalid code");
+    }
+  };
+
+  const handleSaveProfile = async () => {
+    if (email !== originalEmail && !emailVerified) {
+      alert("Please verify your new email address first.");
+      return;
+    }
+
+    try {
+      const payload: any = { name_en: displayName };
+      if (email !== originalEmail) {
+        payload.email = email;
+        payload.proof_token = proofToken;
+      }
+
+      await api.put("/users/me", payload);
+      alert("Profile updated successfully.");
+
+      // Update session to reflect changes immediately
+      await updateSession();
+      window.location.reload();
+    } catch (e: any) {
+      alert(e.response?.data?.error || "Failed to update profile");
+    }
+  };
+
+  // --- CATEGORY LOGIC ---
   const handleAddCategory = async (type: 'expense' | 'income') => {
     if (!newCategory.trim()) return;
     if (!isPremium) return alert("Custom categories are a Premium feature.");
@@ -78,7 +205,6 @@ export default function SettingsPage() {
       console.error(e);
     }
   };
-
   const handleRemoveCategory = async (type: 'expense' | 'income', name: string) => {
     if(!confirm(`Remove category "${name}"?`)) return;
     if (!isPremium) return alert("Managing categories is a Premium feature.");
@@ -90,6 +216,7 @@ export default function SettingsPage() {
     }
   };
 
+  // --- BALANCE LOGIC ---
   const handleUpdateBalance = async (currency: string, amount: string) => {
     try {
       await api.post("/settings/balance", { currency, amount: parseFloat(amount) });
@@ -98,7 +225,6 @@ export default function SettingsPage() {
       console.error(e);
     }
   };
-
   const handleUpdateRate = async () => {
     try {
       await api.post("/settings/rate", { rate: parseFloat(rate) });
@@ -107,7 +233,6 @@ export default function SettingsPage() {
       console.error(e);
     }
   };
-
   const handleSaveMode = async () => {
     try {
       await api.post("/settings/mode", {
@@ -115,13 +240,14 @@ export default function SettingsPage() {
         primary_currency: primaryCurrency
       });
       alert("Currency settings saved.");
-      window.location.reload(); // Reload to refresh contexts
+      window.location.reload();
     } catch(e) {
       console.error(e);
       alert("Failed to save mode.");
     }
   };
 
+  // --- SUBSCRIPTION LOGIC ---
   const handleUpgrade = async () => {
     setPaymentLoading(true);
     try {
@@ -143,6 +269,7 @@ export default function SettingsPage() {
     }
   };
 
+  // --- DATA LOGIC ---
   const handleExportData = async () => {
     try {
       const res = await api.post("/users/data/export");
@@ -156,7 +283,6 @@ export default function SettingsPage() {
       alert("Export failed.");
     }
   };
-
   const handleDeleteAccount = async () => {
     const confirmText = prompt("Type 'DELETE' to confirm permanent account deletion. This cannot be undone.");
     if (confirmText === 'DELETE') {
@@ -179,6 +305,81 @@ export default function SettingsPage() {
       </div>
 
       <div className="grid gap-8">
+
+        {/* --- PROFILE SETTINGS (NEW) --- */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Profile Details</CardTitle>
+            <CardDescription>Manage your public display name and login credentials.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid gap-4">
+              <div className="grid gap-2">
+                <label className="text-sm font-medium">Display Name</label>
+                <div className="relative">
+                  <User className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                  <Input
+                    className="pl-9"
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    placeholder="Your Name"
+                  />
+                </div>
+              </div>
+
+              <div className="grid gap-2">
+                <label className="text-sm font-medium">Email Address</label>
+                <div className="flex gap-2">
+                  <div className="relative flex-1">
+                    <Mail className="absolute left-3 top-3 h-4 w-4 text-slate-400" />
+                    <Input
+                      className="pl-9"
+                      type="email"
+                      value={email}
+                      onChange={(e) => {
+                        setEmail(e.target.value);
+                        setEmailVerified(false); // Reset verification if typed
+                      }}
+                    />
+                  </div>
+                  {email !== originalEmail && !emailVerified && (
+                    <Button onClick={handleRequestOtpReal} variant="outline">
+                      Verify
+                    </Button>
+                  )}
+                  {emailVerified && (
+                    <div className="flex items-center text-emerald-600 px-3 bg-emerald-50 rounded-md border border-emerald-100">
+                      <ShieldCheck className="w-4 h-4 mr-2" /> Verified
+                    </div>
+                  )}
+                </div>
+                {/* OTP Input UI */}
+                {isVerifyingEmail && !emailVerified && (
+                  <div className="mt-2 p-4 bg-blue-50 rounded-lg border border-blue-100 animate-in slide-in-from-top-2">
+                    <label className="text-xs font-bold text-blue-800 uppercase">Verification Code</label>
+                    <div className="flex gap-2 mt-2">
+                      <Input
+                        placeholder="000000"
+                        value={otpCode}
+                        onChange={(e) => setOtpCode(e.target.value)}
+                        className="bg-white"
+                        maxLength={6}
+                      />
+                      <Button onClick={handleVerifyOtpReal}>Confirm</Button>
+                    </div>
+                    <p className="text-xs text-blue-600 mt-2">Sent to {email}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="flex justify-end pt-2">
+              <Button onClick={handleSaveProfile} disabled={email !== originalEmail && !emailVerified}>
+                Save Changes
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* --- SUBSCRIPTION SECTION --- */}
         <Card className={`border-indigo-100 ${isPremium ? "bg-gradient-to-r from-indigo-50 to-white" : "bg-indigo-50/50"}`}>
