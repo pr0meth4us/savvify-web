@@ -1,8 +1,9 @@
+// components/auth/auth-guard.tsx
 "use client";
 
 import { useEffect, useState, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { Spinner } from "@/components/ui/Spinner";
 import api from "@/lib/api";
 
@@ -12,44 +13,36 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isChecking, setIsChecking] = useState(true);
 
-  // Use a ref to prevent overlapping updates causing loops
-  const isUpdating = useRef(false);
+  // Ref to track if we are currently performing an async check to prevent double-firing
+  const isValidating = useRef(false);
 
   useEffect(() => {
     if (status === "loading") return;
 
     if (status === "unauthenticated") {
-      setIsChecking(false);
+      // Middleware should have caught this, but just in case
+      router.replace("/login");
       return;
     }
 
     const validateSession = async () => {
-      // Prevent running validation if we are already in the middle of an update
-      if (isUpdating.current) return;
+      if (isValidating.current) return;
+      isValidating.current = true;
 
       try {
-        // Fetch fresh profile from backend
+        // Fetch fresh profile
         const { data } = await api.get("/users/me");
 
-        // --- ROLE SYNC ---
-        // Ensure data.role exists before comparing
+        // 1. Role Sync
         if (data.role && session?.user?.role !== data.role) {
           console.log(`[AuthGuard] Syncing Role: ${session?.user?.role} -> ${data.role}`);
-
-          isUpdating.current = true; // Lock
-
-          // Send a simplified payload. 'auth.ts' is now patched to handle { role: ... }
           await update({ role: data.role });
-
-          // Force a router refresh to update server components with the new cookie
           router.refresh();
-
-          isUpdating.current = false; // Unlock
-          // We return here because the session update will trigger this effect again with new values
-          return;
+          // We don't return here; we let it fall through to the email check
         }
 
-        // --- ONBOARDING CHECK ---
+        // 2. Onboarding Check
+        // Check top-level email or nested profile email
         const hasEmail = data.email || (data.profile && data.profile.email);
         const isOnCompleteProfile = pathname === "/complete-profile";
 
@@ -63,16 +56,30 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
           return;
         }
 
-      } catch (error) {
-        console.error("[AuthGuard] Validation failed:", error);
-        // If 401, the interceptor handles it.
-        isUpdating.current = false;
-      } finally {
+        // If we get here, everything is good
         setIsChecking(false);
+
+      } catch (error: any) {
+        console.error("[AuthGuard] Validation failed:", error);
+
+        // --- THE FIX IS HERE ---
+        // If token is invalid (401), kill the NextAuth session explicitly.
+        // This clears the cookie so Middleware won't bounce us back.
+        if (error.response?.status === 401) {
+          await signOut({ callbackUrl: "/login" });
+          return;
+        }
+
+        // Optional: Handle 500s or network errors differently
+        setIsChecking(false);
+      } finally {
+        isValidating.current = false;
       }
     };
 
-    validateSession();
+    if (status === "authenticated") {
+      validateSession();
+    }
   }, [status, pathname, router, session?.user?.role, update]);
 
   if (status === "loading" || isChecking) {
