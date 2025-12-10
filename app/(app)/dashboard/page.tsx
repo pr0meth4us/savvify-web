@@ -11,7 +11,6 @@ import {
   CreditCard
 } from "lucide-react";
 
-// --- Types ---
 interface SummaryData {
   balances: Record<string, number>;
   debts_owed_by_you: Array<{ total: number; _id: string }>;
@@ -19,7 +18,16 @@ interface SummaryData {
   periods: Record<string, any>;
 }
 
-// --- Data Fetching ---
+// Fetch user profile to know the currency mode
+async function getUserProfile(token: string) {
+  try {
+    const res = await api.get("/users/me", { headers: { Authorization: `Bearer ${token}` } });
+    return res.data.profile;
+  } catch(e) {
+    return null;
+  }
+}
+
 async function getSummaryData(token: string) {
   try {
     const res = await api.get<SummaryData>("/summary/detailed", {
@@ -31,8 +39,6 @@ async function getSummaryData(token: string) {
     return null;
   }
 }
-
-// --- Helper Components ---
 
 function ActionButton({ href, icon: Icon, label, colorClass }: { href: string, icon: any, label: string, colorClass: string }) {
   return (
@@ -59,14 +65,15 @@ function BalancePill({ currency, amount }: { currency: string, amount: number })
   );
 }
 
-// --- Main Page Component ---
 export default async function Dashboard() {
   const session = await auth();
   if (!session) redirect("/login");
 
-  const data = await getSummaryData(session.accessToken as string);
+  const token = session.accessToken as string;
+  const data = await getSummaryData(token);
+  const profile = await getUserProfile(token);
 
-  if (!data) {
+  if (!data || !profile) {
     return (
       <div className="p-6 bg-red-50 border border-red-100 rounded-2xl text-red-700">
         <h3 className="font-bold mb-1">System Error</h3>
@@ -75,14 +82,17 @@ export default async function Dashboard() {
     );
   }
 
-  // Calculate generic totals for the "at a glance" badges
   const totalOwedToYou = data.debts_owed_to_you.reduce((acc, curr) => acc + curr.total, 0);
   const totalYouOwe = data.debts_owed_by_you.reduce((acc, curr) => acc + curr.total, 0);
 
-  // Get the primary currency (first one found) for the big display, or default to USD
-  const currencies = Object.keys(data.balances);
-  const primaryCurrency = currencies[0] || 'USD';
+  const currencyMode = profile.settings.currency_mode || 'dual';
+  const primaryCurrency = currencyMode === 'single' ? (profile.settings.primary_currency || 'USD') : 'USD';
+
+  // In single mode, balances might only have one key. In dual, it has USD and KHR.
   const primaryBalance = data.balances[primaryCurrency] || 0;
+
+  // Secondary currencies list (for pills)
+  const secondaryCurrencies = Object.keys(data.balances).filter(c => c !== primaryCurrency);
 
   return (
     <div className="space-y-8 max-w-5xl mx-auto pb-20">
@@ -104,6 +114,7 @@ export default async function Dashboard() {
       <section className="grid grid-cols-1 md:grid-cols-12 gap-6">
         {/* Main Card */}
         <div className="md:col-span-8 relative overflow-hidden bg-gradient-to-br from-indigo-600 to-violet-700 rounded-[2rem] p-8 text-white shadow-xl shadow-indigo-500/20">
+
           {/* Decorative background blur */}
           <div className="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
 
@@ -121,12 +132,12 @@ export default async function Dashboard() {
               </span>
             </div>
 
-            {/* Multiple Currencies List (if any exist beyond primary) */}
-            {currencies.length > 1 && (
+            {/* Only show other wallets if they exist (Dual Mode) */}
+            {secondaryCurrencies.length > 0 && (
               <div className="mt-4 mb-8 bg-black/20 rounded-xl p-4 backdrop-blur-sm">
                 <p className="text-xs text-indigo-200 mb-2 font-semibold uppercase">Other Wallets</p>
                 <div className="space-y-1">
-                  {currencies.slice(1).map(currency => (
+                  {secondaryCurrencies.map(currency => (
                     <BalancePill key={currency} currency={currency} amount={data.balances[currency]} />
                   ))}
                 </div>
@@ -158,32 +169,12 @@ export default async function Dashboard() {
           </div>
         </div>
 
-        {/* 3. Quick Actions Grid (Desktop: Side / Mobile: Below) */}
+        {/* 3. Quick Actions Grid */}
         <div className="md:col-span-4 grid grid-cols-2 md:grid-cols-1 gap-4">
-          <ActionButton
-            href="/transactions"
-            icon={Plus}
-            label="Log Expense"
-            colorClass="bg-rose-500 text-rose-600"
-          />
-          <ActionButton
-            href="/transactions"
-            icon={ArrowRightLeft}
-            label="Add Income"
-            colorClass="bg-emerald-500 text-emerald-600"
-          />
-          <ActionButton
-            href="/debts"
-            icon={Wallet}
-            label="New IOU"
-            colorClass="bg-amber-500 text-amber-600"
-          />
-          <ActionButton
-            href="/debts"
-            icon={CreditCard}
-            label="Settle Debt"
-            colorClass="bg-indigo-500 text-indigo-600"
-          />
+          <ActionButton href="/transactions" icon={Plus} label="Log Expense" colorClass="bg-rose-500 text-rose-600" />
+          <ActionButton href="/transactions" icon={ArrowRightLeft} label="Add Income" colorClass="bg-emerald-500 text-emerald-600" />
+          <ActionButton href="/debts" icon={Wallet} label="New IOU" colorClass="bg-amber-500 text-amber-600" />
+          <ActionButton href="/debts" icon={CreditCard} label="Settle Debt" colorClass="bg-indigo-500 text-indigo-600" />
         </div>
       </section>
 
@@ -197,16 +188,12 @@ export default async function Dashboard() {
         </div>
 
         <div className="bg-white rounded-[2rem] border border-zinc-100 shadow-sm p-8 text-center">
-          {/* This replaces the old pie chart for now with a cleaner state
-              until the new TransactionFeed component is ready.
-            */}
           <div className="inline-flex items-center justify-center w-16 h-16 bg-zinc-50 rounded-full mb-4">
             <span className="text-2xl">📊</span>
           </div>
           <h3 className="text-zinc-900 font-semibold mb-2">Spending Analysis</h3>
           <p className="text-zinc-500 text-sm max-w-sm mx-auto">
-            Your detailed spending breakdown for this month is being calculated.
-            Log more transactions to see trends.
+            Your detailed spending breakdown for this month is being calculated. Log more transactions to see trends.
           </p>
         </div>
       </section>

@@ -1,12 +1,12 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import api from "@/lib/api";
 import { UserProfile } from "@/types/api";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
-import { Trash2, Plus, Save, CreditCard, MessageCircle, Star } from "lucide-react";
+import { Trash2, Plus, Save, CreditCard, MessageCircle, Star, Download, AlertTriangle } from "lucide-react";
 import { Spinner } from "@/components/ui/Spinner";
 
 export default function SettingsPage() {
@@ -19,23 +19,42 @@ export default function SettingsPage() {
   const [balanceUSD, setBalanceUSD] = useState("");
   const [balanceKHR, setBalanceKHR] = useState("");
   const [rate, setRate] = useState("");
+
+  // Mode & Currency state
+  const [currencyMode, setCurrencyMode] = useState<'single' | 'dual'>('dual');
+  const [primaryCurrency, setPrimaryCurrency] = useState("USD");
+
   const [paymentLoading, setPaymentLoading] = useState(false);
 
+  const SUPPORTED_CURRENCIES = ["USD", "KHR", "EUR", "GBP", "SGD", "JPY", "CNY", "AUD", "CAD"];
   const GUMROAD_PRODUCT_SLUG = "nmfmm";
   const TELEGRAM_SUPPORT_USER = "HelmSupport";
 
-  // DETERMINE ROLE
   const role = session?.user?.role || "user";
   const isPremium = role === "premium_user" || role === "admin";
 
   const fetchSettings = async () => {
     try {
       const res = await api.get<{profile: UserProfile}>("/settings/");
-      setProfile(res.data.profile);
-      if(res.data.profile.settings) {
-        setBalanceUSD(res.data.profile.settings.initial_balances?.USD?.toString() || "0");
-        setBalanceKHR(res.data.profile.settings.initial_balances?.KHR?.toString() || "0");
-        setRate(res.data.profile.settings.fixed_rate?.toString() || "4100");
+      const p = res.data.profile;
+      setProfile(p);
+
+      if(p.settings) {
+        setBalanceUSD(p.settings.initial_balances?.USD?.toString() || "0");
+        setBalanceKHR(p.settings.initial_balances?.KHR?.toString() || "0");
+        setRate(p.settings.fixed_rate?.toString() || "4100");
+        setCurrencyMode(p.settings.currency_mode || 'dual');
+        setPrimaryCurrency(p.settings.primary_currency || 'USD');
+
+        // If single mode, load that specific balance into the first input field for convenience
+        if (p.settings.currency_mode === 'single') {
+          const curr = p.settings.primary_currency || 'USD';
+          // We reuse setBalanceUSD state for the primary currency balance in UI
+          // This is a UI mapping, backend still uses dynamic keys
+          // But for simplicity, we map it to balanceUSD state var
+          const val = p.settings.initial_balances?.[curr] || 0;
+          setBalanceUSD(val.toString());
+        }
       }
     } catch (error) {
       console.error("Failed to load settings", error);
@@ -71,7 +90,7 @@ export default function SettingsPage() {
     }
   };
 
-  const handleUpdateBalance = async (currency: 'USD' | 'KHR', amount: string) => {
+  const handleUpdateBalance = async (currency: string, amount: string) => {
     try {
       await api.post("/settings/balance", { currency, amount: parseFloat(amount) });
       alert(`${currency} Balance Updated`);
@@ -86,6 +105,20 @@ export default function SettingsPage() {
       alert("Fixed Exchange Rate Updated");
     } catch (e) {
       console.error(e);
+    }
+  };
+
+  const handleSaveMode = async () => {
+    try {
+      await api.post("/settings/mode", {
+        mode: currencyMode,
+        primary_currency: primaryCurrency
+      });
+      alert("Currency settings saved.");
+      window.location.reload(); // Reload to refresh contexts
+    } catch(e) {
+      console.error(e);
+      alert("Failed to save mode.");
     }
   };
 
@@ -110,6 +143,32 @@ export default function SettingsPage() {
     }
   };
 
+  const handleExportData = async () => {
+    try {
+      const res = await api.post("/users/data/export");
+      const blob = new Blob([JSON.stringify(res.data, null, 2)], { type: "application/json" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `savvify_export_${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+    } catch(e) {
+      alert("Export failed.");
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    const confirmText = prompt("Type 'DELETE' to confirm permanent account deletion. This cannot be undone.");
+    if (confirmText === 'DELETE') {
+      try {
+        await api.delete("/users/data/delete");
+        await signOut({ callbackUrl: "/" });
+      } catch(e) {
+        alert("Deletion failed.");
+      }
+    }
+  };
+
   if (loading || !profile) return <div className="flex justify-center p-12"><Spinner /></div>;
 
   return (
@@ -129,8 +188,6 @@ export default function SettingsPage() {
                 <CardTitle className="text-indigo-900">Subscription Status</CardTitle>
                 <CardDescription>Unlock advanced analytics and unlimited history.</CardDescription>
               </div>
-
-              {/* Dynamic Badge */}
               <div className={`px-4 py-1.5 rounded-full text-sm font-bold border uppercase flex items-center gap-2 ${
                 isPremium
                   ? "bg-indigo-600 text-white border-indigo-600 shadow-md"
@@ -144,7 +201,6 @@ export default function SettingsPage() {
           <CardContent className="space-y-4">
             {!isPremium ? (
               <>
-                {/* Option 1: Gumroad */}
                 <div className="bg-white p-4 rounded-xl border border-indigo-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
                     <h4 className="font-bold text-slate-900">Pay with Card / PayPal</h4>
@@ -155,8 +211,6 @@ export default function SettingsPage() {
                     Subscribe ($5/mo)
                   </Button>
                 </div>
-
-                {/* Option 2: Manual */}
                 <div className="bg-white p-4 rounded-xl border border-indigo-100 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
                     <h4 className="font-bold text-slate-900">Pay via ABA / KHQR</h4>
@@ -176,16 +230,45 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        {/* Profile Section */}
+        {/* --- CURRENCY MODE --- */}
         <Card>
           <CardHeader>
-            <CardTitle>Profile</CardTitle>
-            <CardDescription>Your account details.</CardDescription>
+            <CardTitle>Currency Configuration</CardTitle>
+            <CardDescription>Choose how you want to track your money.</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Input label="Display Name (EN)" value={profile.name_en || ''} disabled />
-              <Input label="Email" value={profile.email || ''} disabled />
+          <CardContent className="space-y-6">
+            <div className="flex gap-4">
+              <button
+                onClick={() => setCurrencyMode('dual')}
+                className={`flex-1 p-4 rounded-xl border-2 transition-all ${currencyMode === 'dual' ? 'border-indigo-600 bg-indigo-50 text-indigo-900' : 'border-slate-100 bg-white text-slate-500'}`}
+              >
+                <div className="font-bold mb-1">Dual Mode</div>
+                <div className="text-xs">Track USD & KHR simultaneously. Perfect for Cambodia.</div>
+              </button>
+              <button
+                onClick={() => setCurrencyMode('single')}
+                className={`flex-1 p-4 rounded-xl border-2 transition-all ${currencyMode === 'single' ? 'border-indigo-600 bg-indigo-50 text-indigo-900' : 'border-slate-100 bg-white text-slate-500'}`}
+              >
+                <div className="font-bold mb-1">Single Mode</div>
+                <div className="text-xs">Track one currency only (e.g., USD, EUR).</div>
+              </button>
+            </div>
+
+            {currencyMode === 'single' && (
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-2">Select Primary Currency</label>
+                <select
+                  value={primaryCurrency}
+                  onChange={(e) => setPrimaryCurrency(e.target.value)}
+                  className="w-full p-2 border border-slate-300 rounded-md"
+                >
+                  {SUPPORTED_CURRENCIES.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+            )}
+
+            <div className="flex justify-end">
+              <Button onClick={handleSaveMode}>Save Configuration</Button>
             </div>
           </CardContent>
         </Card>
@@ -193,20 +276,25 @@ export default function SettingsPage() {
         {/* Financial Settings */}
         <Card>
           <CardHeader>
-            <CardTitle>Financial Configuration</CardTitle>
-            <CardDescription>Set your initial balances and exchange rates.</CardDescription>
+            <CardTitle>Initial Balances</CardTitle>
+            <CardDescription>Set the starting amount for your accounts.</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+              {/* Primary Balance Input */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-slate-700">Initial USD Balance</label>
+                <label className="text-sm font-medium text-slate-700">
+                  Initial {currencyMode === 'single' ? primaryCurrency : 'USD'} Balance
+                </label>
                 <div className="flex gap-2">
                   <Input type="number" value={balanceUSD} onChange={(e) => setBalanceUSD(e.target.value)} />
-                  <Button onClick={() => handleUpdateBalance('USD', balanceUSD)}>Save</Button>
+                  <Button onClick={() => handleUpdateBalance(currencyMode === 'single' ? primaryCurrency : 'USD', balanceUSD)}>Save</Button>
                 </div>
               </div>
 
-              {profile.settings.currency_mode === 'dual' && (
+              {/* Secondary Balance Input (Dual Mode Only) */}
+              {currencyMode === 'dual' && (
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-slate-700">Initial KHR Balance</label>
                   <div className="flex gap-2">
@@ -217,17 +305,20 @@ export default function SettingsPage() {
               )}
             </div>
 
-            <div className="pt-6 border-t border-slate-100">
-              <label className="text-sm font-medium text-slate-700">Fixed Exchange Rate (1 USD = ? KHR)</label>
-              <div className="flex gap-2 mt-2 max-w-xs">
-                <Input type="number" value={rate} onChange={(e) => setRate(e.target.value)} placeholder="4100" />
-                <Button variant="outline" onClick={handleUpdateRate}><Save className="w-4 h-4 mr-2"/> Set</Button>
+            {/* Rate is only relevant for Dual mode */}
+            {currencyMode === 'dual' && (
+              <div className="pt-6 border-t border-slate-100">
+                <label className="text-sm font-medium text-slate-700">Fixed Exchange Rate (1 USD = ? KHR)</label>
+                <div className="flex gap-2 mt-2 max-w-xs">
+                  <Input type="number" value={rate} onChange={(e) => setRate(e.target.value)} placeholder="4100" />
+                  <Button variant="outline" onClick={handleUpdateRate}><Save className="w-4 h-4 mr-2"/> Set</Button>
+                </div>
               </div>
-            </div>
+            )}
           </CardContent>
         </Card>
 
-        {/* Categories Manager - LOCKED FOR FREE USERS */}
+        {/* Categories Manager */}
         <Card className={!isPremium ? "opacity-75" : ""}>
           <CardHeader>
             <div className="flex justify-between">
@@ -243,13 +334,10 @@ export default function SettingsPage() {
             </div>
           </CardHeader>
           <CardContent className="relative">
-            {/* Overlay for Free Users */}
             {!isPremium && (
               <div className="absolute inset-0 z-10 bg-white/50 cursor-not-allowed" title="Upgrade to Premium to edit categories" />
             )}
-
             <div className="space-y-8">
-              {/* Expense Section */}
               <div>
                 <h4 className="text-sm font-bold text-slate-900 mb-3 uppercase tracking-wide">Expense Categories</h4>
                 <div className="flex flex-wrap gap-2 mb-4">
@@ -257,7 +345,7 @@ export default function SettingsPage() {
                     <span key={cat} className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-rose-50 text-rose-700 border border-rose-100">
                       {cat}
                       <button onClick={() => handleRemoveCategory('expense', cat)} disabled={!isPremium} className="ml-2 hover:text-rose-900 disabled:opacity-0">
-                        <Trash2 className="w-3 h-3" />
+                         <Trash2 className="w-3 h-3" />
                       </button>
                     </span>
                   ))}
@@ -268,7 +356,6 @@ export default function SettingsPage() {
                 </div>
               </div>
 
-              {/* Income Section */}
               <div>
                 <h4 className="text-sm font-bold text-slate-900 mb-3 uppercase tracking-wide">Income Categories</h4>
                 <div className="flex flex-wrap gap-2 mb-4">
@@ -277,7 +364,7 @@ export default function SettingsPage() {
                       {cat}
                       <button onClick={() => handleRemoveCategory('income', cat)} disabled={!isPremium} className="ml-2 hover:text-emerald-900 disabled:opacity-0">
                         <Trash2 className="w-3 h-3" />
-                      </button>
+                       </button>
                     </span>
                   ))}
                 </div>
@@ -286,6 +373,24 @@ export default function SettingsPage() {
                   <Button onClick={() => handleAddCategory('income')} size="sm" disabled={!isPremium}><Plus className="w-4 h-4"/></Button>
                 </div>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* DATA PRIVACY */}
+        <Card className="border-red-100 bg-red-50/10">
+          <CardHeader>
+            <CardTitle>Data & Privacy</CardTitle>
+            <CardDescription>Manage your personal data.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button variant="outline" onClick={handleExportData}>
+                <Download className="w-4 h-4 mr-2" /> Export My Data
+              </Button>
+              <Button variant="danger" onClick={handleDeleteAccount}>
+                <AlertTriangle className="w-4 h-4 mr-2" /> Delete Account
+              </Button>
             </div>
           </CardContent>
         </Card>
