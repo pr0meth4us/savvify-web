@@ -70,6 +70,17 @@ export function PublicFooter() {
                     Privacy Policy
                   </Link>
                 </li>
+                {/* --- SUPPORT LINK --- */}
+                <li>
+                  <a
+                    href="https://t.me/pr0meth4us"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-slate-600 hover:text-slate-900"
+                  >
+                    Contact Support
+                  </a>
+                </li>
               </ul>
             </div>
           </div>

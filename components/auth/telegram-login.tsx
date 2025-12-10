@@ -47,7 +47,7 @@ export default function TelegramLogin() {
       <div className="text-center mb-4 bg-blue-50 p-4 rounded-lg border border-blue-100">
         <h3 className="font-semibold text-blue-900">Telegram Login</h3>
         <p className="text-sm text-blue-700 mt-1">
-          Open <b>@FinanceBot</b> on Telegram, type <span className="font-mono bg-white px-1 rounded">/login</span>, and enter the code below.
+          Open <b>@savvify_bot</b> on Telegram, type <span className="font-mono bg-white px-1 rounded">/login</span>, and enter the code below.
         </p>
       </div>
 

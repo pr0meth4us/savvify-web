@@ -36,7 +36,7 @@ export default function SettingsPage() {
 
   const SUPPORTED_CURRENCIES = ["USD", "KHR", "EUR", "GBP", "SGD", "JPY", "CNY", "AUD", "CAD"];
   const GUMROAD_PRODUCT_SLUG = "nmfmm";
-  const TELEGRAM_SUPPORT_USER = "HelmSupport";
+  const TELEGRAM_SUPPORT_USER = "pr0meth4us";
 
   const role = session?.user?.role || "user";
   const isPremium = role === "premium_user" || role === "admin";

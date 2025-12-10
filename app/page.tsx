@@ -51,14 +51,13 @@ export default function Home() {
 
             {/* NEW BOT LINK BUTTON */}
             <Button size="lg" variant="outline" className="rounded-full px-8 h-14 text-lg border-zinc-200 text-zinc-700 hover:bg-zinc-50 gap-2" asChild>
-              <a href="https://t.me/YourBotUsernameHere" target="_blank" rel="noopener noreferrer">
+              <a href="https://t.me/savvify_bot" target="_blank" rel="noopener noreferrer">
                 <Send className="w-5 h-5 text-blue-500" />
                 Chat with Bot
               </a>
             </Button>
           </div>
 
-          {/* ... (Keep the rest of the file exactly as it was: The visual demo, bento grid, etc.) ... */}
           {/* VISUAL DEMO SECTION START */}
           <div className="relative mx-auto max-w-4xl bg-zinc-900 rounded-2xl p-4 shadow-2xl ring-1 ring-zinc-900/5">
             <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-zinc-800 to-zinc-950 rounded-2xl -z-10" />
@@ -176,8 +175,7 @@ export default function Home() {
             Get your financial clarity back.
           </h2>
           <p className="text-zinc-500 mb-10 max-w-xl mx-auto">
-            Join the smart spenders who have ditched their spreadsheets.
-            Try it free for 30 days.
+            Join the smart spenders who have ditched their spreadsheets. Try it free for 30 days.
           </p>
           <Button size="lg" className="rounded-full px-10 h-14 text-lg bg-zinc-900 text-white hover:bg-zinc-800" asChild>
             <Link href="/signup">Start Free Trial</Link>
