@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="96c15fb9-048b-4717-8d22-6ea6afd2a399" name="Changes" comment="update">
-      <change beforePath="$PROJECT_DIR$/app/(app)/settings/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(app)/settings/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/auth/telegram-login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/auth/telegram-login.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/(public)/guide/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/components/ui/PublicFooter.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ui/PublicFooter.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

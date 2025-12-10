@@ -19,67 +19,42 @@ export function PublicFooter() {
           {/* Nav Groups */}
           <div className="flex gap-12">
             <div>
-              <h3 className="font-semibold text-slate-900">
-                Product
-              </h3>
+              <h3 className="font-semibold text-slate-900">Product</h3>
               <ul className="mt-2 space-y-2">
                 <li>
-                  <Link
-                    href="/#features"
-                    className="text-sm text-slate-600 hover:text-slate-900"
-                  >
+                  <Link href="/#features" className="text-sm text-slate-600 hover:text-slate-900">
                     Features
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    href="/pricing"
-                    className="text-sm text-slate-600 hover:text-slate-900"
-                  >
+                  <Link href="/guide" className="text-sm text-slate-600 hover:text-slate-900">
+                    User Guide
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/pricing" className="text-sm text-slate-600 hover:text-slate-900">
                     Pricing
                   </Link>
                 </li>
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold text-slate-900">
-                Company
-              </h3>
+              <h3 className="font-semibold text-slate-900">Company</h3>
               <ul className="mt-2 space-y-2">
                 <li>
-                  <Link
-                    href="/trust"
-                    className="text-sm text-slate-600 hover:text-slate-900"
-                  >
+                  <Link href="/trust" className="text-sm text-slate-600 hover:text-slate-900">
                     Trust Center
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    href="/terms"
-                    className="text-sm text-slate-600 hover:text-slate-900"
-                  >
+                  <Link href="/terms" className="text-sm text-slate-600 hover:text-slate-900">
                     Terms of Service
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    href="/privacy"
-                    className="text-sm text-slate-600 hover:text-slate-900"
-                  >
+                  <Link href="/privacy" className="text-sm text-slate-600 hover:text-slate-900">
                     Privacy Policy
                   </Link>
-                </li>
-                {/* --- SUPPORT LINK --- */}
-                <li>
-                  <a
-                    href="https://t.me/pr0meth4us"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm text-slate-600 hover:text-slate-900"
-                  >
-                    Contact Support
-                  </a>
                 </li>
               </ul>
             </div>
