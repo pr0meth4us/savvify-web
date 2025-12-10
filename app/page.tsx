@@ -41,7 +41,7 @@ export default function Home() {
           <p className="text-xl text-zinc-500 max-w-2xl mx-auto mb-10 leading-relaxed">
             Most expense trackers feel like homework.
             Savvify lives in your chat app.
-            Just text <strong>"Coffee $5"</strong> and get on with your life.
+            Just text <strong>"Coffee 5"</strong> and get on with your life.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
