@@ -1,3 +1,4 @@
+// app/page.tsx
 import Link from "next/link";
 import { PublicHeader } from "@/components/ui/PublicHeader";
 import { PublicFooter } from "@/components/ui/PublicFooter";
@@ -8,13 +9,13 @@ import {
   Zap,
   Globe,
   ShieldCheck,
-  CheckCircle2
+  CheckCircle2,
+  Send
 } from "lucide-react";
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-white">
-      {/* 1. Add the Header here */}
       <PublicHeader />
 
       {/* --- HERO SECTION --- */}
@@ -38,7 +39,8 @@ export default function Home() {
           </h1>
 
           <p className="text-xl text-zinc-500 max-w-2xl mx-auto mb-10 leading-relaxed">
-            Most expense trackers feel like homework. Savvify lives in your chat app.
+            Most expense trackers feel like homework.
+            Savvify lives in your chat app.
             Just text <strong>"Coffee $5"</strong> and get on with your life.
           </p>
 
@@ -46,12 +48,18 @@ export default function Home() {
             <Button size="lg" className="rounded-full px-8 h-14 text-lg shadow-xl shadow-indigo-500/20 bg-indigo-600 hover:bg-indigo-700 text-white border-0" asChild>
               <Link href="/signup">Start Free Trial</Link>
             </Button>
-            <Button size="lg" variant="outline" className="rounded-full px-8 h-14 text-lg border-zinc-200 text-zinc-700 hover:bg-zinc-50" asChild>
-              <Link href="/pricing">View Pricing</Link>
+
+            {/* NEW BOT LINK BUTTON */}
+            <Button size="lg" variant="outline" className="rounded-full px-8 h-14 text-lg border-zinc-200 text-zinc-700 hover:bg-zinc-50 gap-2" asChild>
+              <a href="https://t.me/YourBotUsernameHere" target="_blank" rel="noopener noreferrer">
+                <Send className="w-5 h-5 text-blue-500" />
+                Chat with Bot
+              </a>
             </Button>
           </div>
 
-          {/* --- THE "AHA!" VISUAL --- */}
+          {/* ... (Keep the rest of the file exactly as it was: The visual demo, bento grid, etc.) ... */}
+          {/* VISUAL DEMO SECTION START */}
           <div className="relative mx-auto max-w-4xl bg-zinc-900 rounded-2xl p-4 shadow-2xl ring-1 ring-zinc-900/5">
             <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-zinc-800 to-zinc-950 rounded-2xl -z-10" />
 
@@ -100,6 +108,8 @@ export default function Home() {
               <ArrowRight className="w-6 h-6 text-indigo-600" />
             </div>
           </div>
+          {/* VISUAL DEMO SECTION END */}
+
         </div>
       </section>
 
@@ -112,7 +122,6 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Card 1: Large */}
             <div className="md:col-span-2 bg-white p-8 rounded-3xl border border-zinc-200 shadow-sm hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 mb-6">
                 <MessageSquare />
@@ -123,7 +132,6 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Card 2: Tall */}
             <div className="bg-zinc-900 p-8 rounded-3xl shadow-sm text-white flex flex-col justify-between">
               <div>
                 <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-white mb-6">
@@ -131,12 +139,11 @@ export default function Home() {
                 </div>
                 <h3 className="text-xl font-bold mb-2">Multi-Currency</h3>
                 <p className="text-zinc-400">
-                  Spending in USD, and KHR? We track it all and normalize your net worth automatically.
+                  Spending in USD and KHR? We track it all and normalize your net worth automatically.
                 </p>
               </div>
             </div>
 
-            {/* Card 3 */}
             <div className="bg-white p-8 rounded-3xl border border-zinc-200 shadow-sm hover:shadow-md transition-shadow">
               <div className="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600 mb-6">
                 <ShieldCheck />
@@ -147,7 +154,6 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Card 4 */}
             <div className="md:col-span-2 bg-white p-8 rounded-3xl border border-zinc-200 shadow-sm hover:shadow-md transition-shadow flex items-center justify-between">
               <div>
                 <h3 className="text-xl font-bold text-zinc-900 mb-2">Zero-Access Privacy</h3>
@@ -170,7 +176,8 @@ export default function Home() {
             Get your financial clarity back.
           </h2>
           <p className="text-zinc-500 mb-10 max-w-xl mx-auto">
-            Join the smart spenders who have ditched their spreadsheets. Try it free for 30 days.
+            Join the smart spenders who have ditched their spreadsheets.
+            Try it free for 30 days.
           </p>
           <Button size="lg" className="rounded-full px-10 h-14 text-lg bg-zinc-900 text-white hover:bg-zinc-800" asChild>
             <Link href="/signup">Start Free Trial</Link>
@@ -179,7 +186,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 2. Add the Footer here */}
       <PublicFooter />
     </div>
   );
